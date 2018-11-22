@@ -9,9 +9,12 @@ private:
 	wxFrame* parent;
 	wxBitmap* background;
 	wxImage image;
+	wxButton *backToMainMenu;
+	wxImage loadLogo(wxString path);
 public:
 	MapGame(wxFrame *parent);
 	~MapGame();
 	void OnButtonClick(wxCommandEvent &event);
+	void OnPaint(wxPaintEvent &event);
 };
 

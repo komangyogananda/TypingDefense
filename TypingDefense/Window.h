@@ -7,9 +7,9 @@ private:
 	DECLARE_EVENT_TABLE()
 	int width, height;
 	wxBitmap* logo;
-	wxImage loadLogo();
+	wxImage loadLogo(wxString path);
 	wxFrame* parent;
-	wxImage image;
+	wxButton *playGame, *highScore;
 public:
 	Window(wxFrame *parent);
 	~Window();
