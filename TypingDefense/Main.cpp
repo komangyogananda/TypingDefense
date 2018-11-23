@@ -14,6 +14,5 @@ bool MyApp::OnInit()
 {
 	wxImage::AddHandler(new wxPNGHandler);
 	Frame *frame = new Frame("Typing Defense");
-	frame->ShowFullScreen(true);
 	return true;
 }

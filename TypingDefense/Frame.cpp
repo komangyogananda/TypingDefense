@@ -2,11 +2,9 @@
 
 Frame::Frame(const wxString & title) : wxFrame(NULL, wxID_ANY, title)
 {
-	this->SetInitialSize(wxSize(1280, 720));
+	this->ShowFullScreen(true);
 	this->window = new Window(this);
 	this->window->Show(true);
-	CreateStatusBar();
-	SetStatusText("test");
 }
 
 void Frame::setCurrentWindow(int a) {

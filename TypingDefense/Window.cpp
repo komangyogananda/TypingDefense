@@ -20,13 +20,16 @@ Window::Window(wxFrame *parent) : wxWindow(parent, wxID_ANY)
 	wxMessageOutputDebug().Printf("WINDOW p %d %d\n", width, height);
 	wxMessageOutputDebug().Printf("WINDOW %d %d\n", w, h);
 	this->SetSize(wxSize(width, height));
-	wxButton *playGame = new wxButton(this, 1001, wxT("Play Game!"), wxPoint(width/2 - 40, height/2 - 10), wxDefaultSize);
-	wxButton *highScore = new wxButton(this, 1002, wxT("High Score!"), wxPoint(width/2 - 40, height/2 + 30), wxDefaultSize);
+	playGame = new wxButton(this, 1001, wxT("Play Game!"), wxPoint(0,0), wxDefaultSize);
+	highScore = new wxButton(this, 1002, wxT("High Score!"), wxPoint(0,0), wxDefaultSize);
+	playGame->Centre();
+	highScore->Centre();
+	int whg, hhg;
+	highScore->GetPosition(&whg, &hhg);
+	highScore->SetPosition(wxPoint(whg, hhg + 50));
 	logo = nullptr;
 	this->SetBackgroundColour(wxColour(204, 172, 106));
 }
-
-
 
 Window::~Window()
 {

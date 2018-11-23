@@ -1,0 +1,9 @@
+﻿  Frame.cpp
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\frame.h(2): fatal error C1083: Cannot open include file: 'wx\wx.h': No such file or directory
+  Main.cpp
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\main.cpp(1): fatal error C1083: Cannot open include file: 'wx\wx.h': No such file or directory
+  MapGame.cpp
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.h(2): fatal error C1083: Cannot open include file: 'wx/wx.h': No such file or directory
+  Window.cpp
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\window.h(2): fatal error C1083: Cannot open include file: 'wx/wx.h': No such file or directory
+  Generating Code...
