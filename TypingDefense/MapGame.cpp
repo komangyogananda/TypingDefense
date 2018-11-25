@@ -7,7 +7,10 @@
 using namespace std;
 
 BEGIN_EVENT_TABLE(MapGame, wxWindow)
+	EVT_KEY_DOWN(MapGame::OnKeyDown)
+	EVT_CHAR(MapGame::OnChar)
 	EVT_TIMER(2000, MapGame::OnTimer)
+	EVT_TIMER(2001, MapGame::QuestGiver)
 	EVT_BUTTON(1003, MapGame::OnButtonClick)
 	EVT_LEFT_DOWN(MapGame::OnClick)
 	EVT_PAINT(MapGame::OnPaint)
@@ -15,6 +18,8 @@ END_EVENT_TABLE()
 
 MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 {
+	this->SetFocus();
+	quest = new Quest();
 	user = new User("Your Name");
 	user->lifePoint = 150;
 	this->parent = parent;
@@ -23,6 +28,8 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	wxMessageOutputDebug().Printf("MAP GAME %d %d\n", w, h);
 	this->SetSize(wxSize(w, h));
 	timer = new wxTimer(this, 2000);
+	//questTimer = new wxTimer(this, 2001);
+	//questTimer->Start(3000);
 	timer->Start(10);
 	backToMainMenu = new wxButton(this, 1003, wxT("Back To Main Menu"), wxPoint(w - 200, h - 200), wxDefaultSize);
 	background = nullptr;
@@ -114,6 +121,22 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			if (it == allMonster.end()) break;
 		}
 	}
+
+	if ((this->quest)->check()) {
+		user->money += (this->quest->getTarget()).size();
+		(this->quest)->clearCurrent();
+		(this->quest)->clearTarget();
+		(this->quest)->clearLCP();
+	}
+
+	wxFont questFont(30, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	pdc.SetFont(questFont);
+
+	pdc.DrawText((this->quest)->getCurrent(), wxPoint(100, wxGetDisplaySize().GetHeight() - 150));
+	pdc.DrawText((this->quest)->getTarget(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
+	pdc.SetTextForeground(RGB(255, 0, 0));
+	pdc.DrawText((this->quest)->getLCP(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
+	pdc.SetTextForeground(RGB(0, 0, 0));
 }
 
 void MapGame::OnClick(wxMouseEvent & event)
@@ -145,6 +168,22 @@ void MapGame::OnTimer(wxTimerEvent &event) {
 		it->jalan(10, 0);
 	}
 	Refresh(0);
+}
+
+void MapGame::OnKeyDown(wxKeyEvent & event)
+{
+	if (event.GetKeyCode() == WXK_BACK)
+		(this->quest)->remCurrent();
+	else event.Skip();
+}
+
+void MapGame::OnChar(wxKeyEvent & event)
+{
+	(this->quest)->addCurrent(event.GetKeyCode());
+}
+
+void MapGame::QuestGiver(wxTimerEvent & event)
+{
 }
 
 void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {

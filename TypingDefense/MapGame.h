@@ -5,6 +5,7 @@
 #include <string>
 #include "Monster.h"
 #include "User.h"
+#include "Quest.h"
 
 struct koordinatBox {
 	int x1, y1, x2, y2;
@@ -25,9 +26,11 @@ private:
 	std::vector<Monster*> allMonster;
 	std::vector<wxBitmap*> skill;
 	wxTimer *timer;
+	wxTimer *questTimer;
 	std::string status;
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
+	Quest *quest;
 
 public:
 	MapGame(wxFrame *parent);
@@ -36,5 +39,8 @@ public:
 	void OnPaint(wxPaintEvent &event);
 	void OnClick(wxMouseEvent &event);
 	void OnTimer(wxTimerEvent &event);
+	void OnKeyDown(wxKeyEvent &event);
+	void OnChar(wxKeyEvent &event);
+	void QuestGiver(wxTimerEvent &event);
 };
 

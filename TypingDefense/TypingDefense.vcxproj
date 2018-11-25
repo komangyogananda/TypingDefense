@@ -131,6 +131,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapGame.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Quest.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -138,6 +139,7 @@
     <ClInclude Include="Frame.h" />
     <ClInclude Include="MapGame.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Quest.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
