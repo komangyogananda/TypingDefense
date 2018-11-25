@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include "Window.h"
 #include "Frame.h"
+#include <cctype>
 
 using namespace std;
 
@@ -199,7 +200,9 @@ void MapGame::OnKeyDown(wxKeyEvent & event)
 
 void MapGame::OnChar(wxKeyEvent & event)
 {
-	(this->quest)->addCurrent(event.GetKeyCode());
+	if (isprint(event.GetKeyCode()))
+		(this->quest)->addCurrent(event.GetKeyCode());
+	else event.Skip();
 }
 
 void MapGame::QuestGiver(wxTimerEvent & event)
