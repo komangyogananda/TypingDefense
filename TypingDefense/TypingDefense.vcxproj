@@ -124,11 +124,13 @@
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapGame.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frame.h" />
     <ClInclude Include="MapGame.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
