@@ -1,9 +1,2 @@
-﻿  Frame.cpp
-  Main.cpp
-  MapGame.cpp
-c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(99): warning C4018: '<': signed/unsigned mismatch
-c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(113): warning C4018: '<': signed/unsigned mismatch
-  Monster.cpp
-  Window.cpp
-  Generating Code...
+﻿  Monster.cpp
   TypingDefense.vcxproj -> C:\Users\komangyogananda\source\repos\TypingDefense\Debug\TypingDefense.exe

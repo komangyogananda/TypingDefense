@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Monster.h"
+#include "User.h"
 
 struct koordinatBox {
 	int x1, y1, x2, y2;
@@ -25,7 +26,8 @@ private:
 	std::vector<wxBitmap*> skill;
 	wxTimer *timer;
 	std::string status;
-	void drawBackground();
+	User *user;
+	void drawHealthBar(wxBufferedPaintDC &pdc);
 public:
 	MapGame(wxFrame *parent);
 	~MapGame();

@@ -10,6 +10,7 @@ private:
 	int attackPoint;
 	int level;
 	int x, y;
+	int r = 20;
 	void moveX(int point);
 	void moveY(int point);
 

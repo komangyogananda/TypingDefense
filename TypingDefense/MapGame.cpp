@@ -15,13 +15,15 @@ END_EVENT_TABLE()
 
 MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 {
+	user = new User("Your Name");
+	user->lifePoint = 150;
 	this->parent = parent;
 	parent->GetSize(&w, &h);
 	wxMessageOutputDebug().Printf("MAP GAME p %d %d\n", w, h);
 	wxMessageOutputDebug().Printf("MAP GAME %d %d\n", w, h);
 	this->SetSize(wxSize(w, h));
 	timer = new wxTimer(this, 2000);
-	timer->Start(1);
+	timer->Start(10);
 	backToMainMenu = new wxButton(this, 1003, wxT("Back To Main Menu"), wxPoint(w - 200, h - 200), wxDefaultSize);
 	background = nullptr;
 	mapStatusBar = new wxStatusBar(this->parent, -1);
@@ -100,6 +102,8 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		pdc.DrawBitmap(*skill[i], wxPoint(skillButton[i].x1, skillButton[i].y1), true);
 	}
 
+	drawHealthBar(pdc);
+
 	for (auto it : allMonster) {
 		it->draw(pdc);
 	}
@@ -131,11 +135,20 @@ void MapGame::OnButtonClick(wxCommandEvent & event)
 }
 
 void MapGame::OnTimer(wxTimerEvent &event) {
-	static int counter = 0;
-	
-	//wxMessageOutputDebug().Printf("wxTimer event %d.", counter++);
 	for (auto it : allMonster) {
-		it->jalan(5, 0);
+		it->jalan(1, 0);
 	}
 	Refresh(0);
+}
+
+void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {
+	pdc.SetBrush(wxBrush(wxColour(0, 0, 0), wxBRUSHSTYLE_TRANSPARENT));
+	pdc.SetPen(wxPen(wxColour(*wxWHITE)));
+	pdc.DrawText(user->nama, 5, 5);
+	pdc.DrawRoundedRectangle(5, wxGetDisplaySize().GetHeight() / 35, wxGetDisplaySize().GetWidth() / 3, 20, 3);
+	pdc.SetBrush(wxBrush(wxColour(255 * (user->maxLifePoint - user->lifePoint) / user->maxLifePoint, 255 * user->lifePoint / user->maxLifePoint, 0)));
+	pdc.SetPen(wxPen(wxColour(*wxWHITE)));
+	pdc.DrawText(user->nama, 5, 5);
+	pdc.DrawRoundedRectangle(5, wxGetDisplaySize().GetHeight() / 35,user->lifePoint*wxGetDisplaySize().GetWidth() / 3 / user->maxLifePoint, 20, 3);
+	pdc.DrawText("Score: " + to_string(user->score), 5, wxGetDisplaySize().GetHeight() / 35 + 25);
 }
