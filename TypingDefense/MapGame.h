@@ -17,7 +17,8 @@ private:
 	DECLARE_EVENT_TABLE()
 	int w, h;
 	wxFrame* parent;
-	wxBitmap* background;
+	wxBitmap* background, *coin;
+	wxSize coinSize;
 	wxImage image;
 	wxButton *backToMainMenu;
 	wxStatusBar *mapStatusBar;
@@ -31,6 +32,8 @@ private:
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
 	Quest *quest;
+	clock_t now = clock();
+	int questInterval;
 
 public:
 	MapGame(wxFrame *parent);

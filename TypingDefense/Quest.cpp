@@ -19,8 +19,9 @@ void Quest::randomizeTarget()
 
 bool Quest::check()
 {
-	if (LCP == target)
+	if (LCP == target) {
 		return true;
+	}
 	return false;
 }
 
@@ -84,7 +85,6 @@ string Quest::getLCP()
 Quest::Quest()
 {
 	initWords();
-	randomizeTarget();
 }
 
 
