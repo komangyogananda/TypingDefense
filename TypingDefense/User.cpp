@@ -7,6 +7,7 @@ User::User(string nama)
 	this->money = 100;
 	this->maxMana = this->mana = 200;
 	this->lifePoint = this->maxLifePoint = 500;
+	this->score = 0;
 }
 
 User::~User()

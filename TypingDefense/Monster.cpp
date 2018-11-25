@@ -1,4 +1,9 @@
 #include "Monster.h"
+#include "MapGame.h"
+
+Monster::~Monster()
+{
+}
 
 void Monster::moveX(int point)
 {
@@ -10,8 +15,9 @@ void Monster::moveY(int point)
 	this->y += point;
 }
 
-Monster::Monster(int maxHealthPoint, int attackPoint, int x, int y, int level)
+Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int level)
 {
+	map = mapGame;
 	this->maxHealthPoint = maxHealthPoint;
 	this->healthPoint = maxHealthPoint-70;
 	this->attackPoint = attackPoint;
@@ -26,7 +32,9 @@ void Monster::jalan(int x, int y)
 	moveY(y);
 }
 
-void Monster::draw(wxBufferedPaintDC &pdc) {
+int Monster::draw(wxBufferedPaintDC &pdc) {
+	if (mati()) return 0;
+	if (attack()) return attackPoint;
 	pdc.SetBrush(wxBrush(wxColour(255,255,255)));
 	pdc.DrawCircle(wxPoint(x, y), r);
 	pdc.SetBrush(wxBrush(wxTransparentColour, wxBRUSHSTYLE_TRANSPARENT));
@@ -34,8 +42,20 @@ void Monster::draw(wxBufferedPaintDC &pdc) {
 	pdc.DrawRectangle(x - 20, y + 20, 2*r, 5);
 	pdc.SetBrush(wxBrush(wxColour(255*(maxHealthPoint - healthPoint)/maxHealthPoint, 255*healthPoint/maxHealthPoint, 0), wxBRUSHSTYLE_SOLID));
 	pdc.DrawRectangle(x - 20, y + 20, healthPoint*2*r/maxHealthPoint, 5);
+	return -1;
 }
 
-Monster::~Monster()
+bool Monster::mati()
 {
+	if (healthPoint <= 0) {
+		return true;
+	}
+	return false;
+}
+
+bool Monster::attack() {
+	int x;
+	map->GetSize(&x, NULL);
+	if (this->x >= x) return true;
+	return false;
 }

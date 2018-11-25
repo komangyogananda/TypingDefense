@@ -27,9 +27,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	backToMainMenu = new wxButton(this, 1003, wxT("Back To Main Menu"), wxPoint(w - 200, h - 200), wxDefaultSize);
 	background = nullptr;
 	mapStatusBar = new wxStatusBar(this->parent, -1);
-	mapStatusBar->SetStatusText(wxT("Test ini map game"));
+	status = "default";
 	this->parent->SetStatusBar(mapStatusBar);
-	Monster *test = new Monster(100, 100, 0, wxGetDisplaySize().GetHeight() / 2, 1);
+	Monster *test = new Monster(this, 100, 100, 0, wxGetDisplaySize().GetHeight() / 2, 1);
 	allMonster.push_back(test);
 
 	image = loadLogo(wxT("\\Map.png"));
@@ -90,6 +90,7 @@ wxImage MapGame::loadLogo(wxString path) {
 }
 
 void MapGame::OnPaint(wxPaintEvent& event) {
+	mapStatusBar->SetStatusText(status);
 	mapStatusBar->Show(true);
 	wxBufferedPaintDC pdc(this);
 
@@ -104,8 +105,14 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 
 	drawHealthBar(pdc);
 
-	for (auto it : allMonster) {
-		it->draw(pdc);
+	for (auto it = allMonster.begin(); it != allMonster.end(); it++) {
+		int kondisi = (*it)->draw(pdc);
+		if (kondisi != -1) {
+			user->lifePoint -= (*it)->attackPoint;
+			it = allMonster.erase(it);
+			status = "y";
+			if (it == allMonster.end()) break;
+		}
 	}
 }
 
@@ -123,7 +130,6 @@ void MapGame::OnClick(wxMouseEvent & event)
 			}
 		}
 	}
-	mapStatusBar->SetStatusText(status);
 }
 
 void MapGame::OnButtonClick(wxCommandEvent & event)
@@ -136,7 +142,7 @@ void MapGame::OnButtonClick(wxCommandEvent & event)
 
 void MapGame::OnTimer(wxTimerEvent &event) {
 	for (auto it : allMonster) {
-		it->jalan(1, 0);
+		it->jalan(10, 0);
 	}
 	Refresh(0);
 }

@@ -2,6 +2,8 @@
 #include <wx/dcbuffer.h>
 #include <wx/wx.h>
 
+class MapGame;
+
 class Monster
 {
 private:
@@ -13,12 +15,14 @@ private:
 	int r = 20;
 	void moveX(int point);
 	void moveY(int point);
+	MapGame *map;
 
 	friend class MapGame;
 public:
-	Monster(int maxHealthPoint, int attackPoint, int x, int y, int level);
-	void attack();
-	void jalan(int x, int y);
-	void draw(wxBufferedPaintDC &pdc);
+	Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int level);
 	~Monster();
+	bool attack();
+	void jalan(int x, int y);
+	int draw(wxBufferedPaintDC &pdc);
+	bool mati();
 };

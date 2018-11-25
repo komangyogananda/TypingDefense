@@ -28,6 +28,7 @@ private:
 	std::string status;
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
+
 public:
 	MapGame(wxFrame *parent);
 	~MapGame();
