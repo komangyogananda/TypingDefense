@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Frame.h"
 #include <cctype>
+#include <cmath>
 
 BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_KEY_DOWN(MapGame::OnKeyDown)
@@ -166,9 +167,12 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			this->quest->clearLCP();
 			questTimer->Start((rand() % 5 + 2) * 1000);
 		}
-		pdc.DrawText((this->quest)->getCurrent(), wxPoint(100, wxGetDisplaySize().GetHeight() - 150));
+		string pointer = (fmod(sec, 1) > 0.5 ? "|" : " ");
+		string stSec = to_string(sec);
+		for (int i = 0; i < 3; i++) stSec.pop_back();
+		pdc.DrawText((this->quest)->getCurrent() + pointer, wxPoint(100, wxGetDisplaySize().GetHeight() - 150));
 		pdc.DrawText((this->quest)->getTarget(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
-		pdc.DrawText(to_string(sec) + " s" , wxPoint(100, wxGetDisplaySize().GetHeight() - 250));
+		pdc.DrawText(stSec + " s" , wxPoint(100, wxGetDisplaySize().GetHeight() - 250));
 		pdc.SetTextForeground(RGB(0, 255, 0));
 		pdc.DrawText((this->quest)->getLCP(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
 		pdc.SetTextForeground(RGB(0, 0, 0));
