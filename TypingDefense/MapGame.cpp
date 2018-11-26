@@ -5,8 +5,6 @@
 #include "Frame.h"
 #include <cctype>
 
-using namespace std;
-
 BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_KEY_DOWN(MapGame::OnKeyDown)
 	EVT_CHAR(MapGame::OnChar)
@@ -28,13 +26,14 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	wxMessageOutputDebug().Printf("MAP GAME p %d %d\n", w, h);
 	wxMessageOutputDebug().Printf("MAP GAME %d %d\n", w, h);
 	this->SetSize(wxSize(w, h));
+
 	timer = new wxTimer(this, 2000);
+	timer->Start(5);
 
 	questTimer = new wxTimer(this, 2001);
 	questTimer->Start(2000);
 	this->now = clock();
 	
-	timer->Start(10);
 	backToMainMenu = new wxButton(this, 1003, wxT("Back To Main Menu"), wxPoint(w - 200, h - 200), wxDefaultSize);
 	background = nullptr;
 	mapStatusBar = new wxStatusBar(this->parent, -1);
@@ -42,6 +41,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	this->parent->SetStatusBar(mapStatusBar);
 	Monster *test = new Monster(this, 100, 100, 0, wxGetDisplaySize().GetHeight() / 2, 1);
 	allMonster.push_back(test);
+
+	Tower *tower = new BasicTower(1300, 450, allMonster, allBullet);
+	allTower.push_back(tower);
 
 	image = loadLogo(wxT("\\Map.png"));
 	wxSize a = image.GetSize();
@@ -130,6 +132,20 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		}
 	}
 
+	for (auto it : allTower) {
+		it->draw(pdc);
+	}
+
+	for (auto it = allBullet.begin(); it != allBullet.end(); it++) {
+		int kondisi = (*it)->checkCollision();
+		(*it)->draw(pdc);
+		if (kondisi) {
+			(*it)->giveDamage();
+			it = allBullet.erase(it);
+			if (it == allBullet.end()) break;
+		}
+	}
+
 	if (!this->quest->getTarget().empty() && (this->quest)->check()) {
 		user->money += (this->quest->getTarget()).size() * 5;
 		(this->quest)->clearCurrent();
@@ -186,7 +202,7 @@ void MapGame::OnButtonClick(wxCommandEvent & event)
 
 void MapGame::OnTimer(wxTimerEvent &event) {
 	for (auto it : allMonster) {
-		it->jalan(10, 0);
+		it->jalan(1, 0);
 	}
 	Refresh(0);
 }

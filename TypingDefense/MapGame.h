@@ -6,6 +6,10 @@
 #include "Monster.h"
 #include "User.h"
 #include "Quest.h"
+#include "BasicTower.h"
+#include "Bullet.h"
+
+using namespace std;
 
 struct koordinatBox {
 	int x1, y1, x2, y2;
@@ -23,17 +27,19 @@ private:
 	wxButton *backToMainMenu;
 	wxStatusBar *mapStatusBar;
 	wxImage loadLogo(wxString path);
-	std::vector<koordinatBox> skillButton;
-	std::vector<Monster*> allMonster;
-	std::vector<wxBitmap*> skill;
+	vector<koordinatBox> skillButton;
+	vector<Monster*> allMonster;
+	vector<wxBitmap*> skill;
+	vector<Bullet*> allBullet;
 	wxTimer *timer;
 	wxTimer *questTimer;
-	std::string status;
+	string status;
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
 	Quest *quest;
 	clock_t now = clock();
 	int questInterval;
+	vector<Tower*> allTower;
 
 public:
 	MapGame(wxFrame *parent);

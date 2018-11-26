@@ -19,7 +19,7 @@ Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, i
 {
 	map = mapGame;
 	this->maxHealthPoint = maxHealthPoint;
-	this->healthPoint = maxHealthPoint-70;
+	this->healthPoint = maxHealthPoint;
 	this->attackPoint = attackPoint;
 	this->x = x;
 	this->y = y;
@@ -51,6 +51,27 @@ bool Monster::mati()
 		return true;
 	}
 	return false;
+}
+
+int Monster::getX()
+{
+	return x;
+}
+
+int Monster::getY()
+{
+	return y;
+}
+
+int Monster::getRadius()
+{
+	return r;
+}
+
+void Monster::getDamage(int damage)
+{
+	this->healthPoint -= damage;
+	if (this->healthPoint < 0) this->healthPoint = 0;
 }
 
 bool Monster::attack() {

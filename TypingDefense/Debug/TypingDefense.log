@@ -1,4 +1,4 @@
-﻿  MapGame.cpp
-c:\typingdefense\typingdefense\mapgame.cpp(117): warning C4018: '<': signed/unsigned mismatch
-c:\typingdefense\typingdefense\mapgame.cpp(168): warning C4018: '<': signed/unsigned mismatch
-  TypingDefense.vcxproj -> C:\TypingDefense\Debug\TypingDefense.exe
+﻿  BasicTower.cpp
+  Monster.cpp
+  Generating Code...
+  TypingDefense.vcxproj -> C:\Users\komangyogananda\source\repos\TypingDefense\Debug\TypingDefense.exe

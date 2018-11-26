@@ -1,6 +1,9 @@
 #pragma once
 #include <wx/dcbuffer.h>
 #include <wx/wx.h>
+#include <vector>
+
+using namespace std;
 
 class MapGame;
 
@@ -16,7 +19,6 @@ private:
 	void moveX(int point);
 	void moveY(int point);
 	MapGame *map;
-
 	friend class MapGame;
 public:
 	Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int level);
@@ -25,4 +27,8 @@ public:
 	void jalan(int x, int y);
 	int draw(wxBufferedPaintDC &pdc);
 	bool mati();
+	int getX();
+	int getY();
+	int getRadius();
+	void getDamage(int damage);
 };
