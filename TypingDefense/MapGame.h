@@ -21,7 +21,7 @@ private:
 	DECLARE_EVENT_TABLE()
 	int w, h;
 	wxFrame* parent;
-	wxBitmap* background, *coin;
+	wxBitmap* background, *coin, *questClock;
 	wxSize coinSize;
 	wxImage image;
 	wxButton *backToMainMenu;

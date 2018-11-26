@@ -57,6 +57,10 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image.Rescale(100, image.GetHeight() * 100 / image.GetWidth());
 	coin = new wxBitmap(image);
 	
+	image = loadLogo(wxT("\\clock.png"));
+	image.Rescale(25, 25);
+	questClock = new wxBitmap(image);
+
 	image = loadLogo(wxT("\\snow.png"));
 	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
 	wxBitmap *skillCurr = new wxBitmap(image);
@@ -157,7 +161,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 
 	if (!this->quest->getTarget().empty()) {
-		wxFont questFont(15, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+		wxFont questFont(12, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 		pdc.SetFont(questFont);
 		auto tnow = (double)(clock() - this->now) / CLOCKS_PER_SEC;
 		tnow *= 1000;
@@ -174,7 +178,8 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		pdc.SetPen(*wxWHITE_PEN);
 		pdc.SetBrush(wxColor(RGB(92, 51, 23)));
 		pdc.DrawRoundedRectangle(wxPoint(75, wxGetDisplaySize().GetHeight() - 275), 
-			wxSize(16 * ((this->quest)->getTarget()).size(), 220), 50);
+			wxSize(13 * ((this->quest)->getTarget()).size(), 220), 50);
+		pdc.DrawBitmap(*questClock, wxPoint(100 , wxGetDisplaySize().GetHeight() - 250));
 		pdc.SetTextForeground(RGB(255, 255, 255));
 		pdc.DrawText((this->quest)->getCurrent() + pointer, wxPoint(100, wxGetDisplaySize().GetHeight() - 150));
 		pdc.SetTextForeground(RGB(128, 128, 128));
@@ -184,7 +189,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		else if (sec > 25.0 / 100.0 * (double)this->questInterval / 1000.0)
 			pdc.SetTextForeground(RGB(255, 255, 0));
 		else pdc.SetTextForeground(RGB(255, 0, 0));
-		pdc.DrawText(stSec + " s" , wxPoint(100, wxGetDisplaySize().GetHeight() - 250));
+		pdc.DrawText(stSec + " s" , wxPoint(135, wxGetDisplaySize().GetHeight() - 247));
 		pdc.SetTextForeground(RGB(0, 255, 0));
 		pdc.DrawText((this->quest)->getLCP(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
 		pdc.SetTextForeground(RGB(0, 0, 0));
