@@ -220,7 +220,7 @@ void MapGame::OnKeyDown(wxKeyEvent & event)
 
 void MapGame::OnChar(wxKeyEvent & event)
 {
-	if (isprint(event.GetKeyCode()))
+	if (event.GetKeyCode() >= -1 && event.GetKeyCode() <= 255 && isprint(event.GetKeyCode()))
 		(this->quest)->addCurrent(event.GetKeyCode());
 	else event.Skip();
 }
