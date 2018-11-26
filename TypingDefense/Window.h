@@ -9,7 +9,7 @@ private:
 	wxBitmap* logo;
 	wxImage loadLogo(wxString path);
 	wxFrame* parent;
-	wxButton *playGame, *highScore, *fullScreen;
+	wxButton *playGame, *highScore;
 	wxStatusBar *windowStatusBar;
 public:
 	Window(wxFrame *parent);

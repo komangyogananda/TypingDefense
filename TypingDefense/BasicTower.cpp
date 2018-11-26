@@ -39,6 +39,5 @@ BasicTower::BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet
 
 BasicTower::~BasicTower()
 {
-	delete bullet;
 	delete timer;
 }

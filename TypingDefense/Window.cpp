@@ -16,9 +16,6 @@ Window::Window(wxFrame *parent) : wxWindow(parent, wxID_ANY)
 	this->parent = parent;
 	parent->GetSize(&width, &height);
 	int w, h;
-	this->GetSize(&w, &h);
-	wxMessageOutputDebug().Printf("WINDOW p %d %d\n", width, height);
-	wxMessageOutputDebug().Printf("WINDOW %d %d\n", w, h);
 	this->SetSize(wxSize(width, height));
 	playGame = new wxButton(this, 1001, wxT("Play Game!"), wxPoint(0,0), wxDefaultSize);
 	highScore = new wxButton(this, 1002, wxT("High Score!"), wxPoint(0,0), wxDefaultSize);
@@ -36,6 +33,7 @@ Window::~Window()
 	delete logo;
 	delete playGame;
 	delete highScore;
+	delete windowStatusBar;
 }
 
 wxImage Window::loadLogo(wxString path) {

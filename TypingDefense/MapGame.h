@@ -40,6 +40,7 @@ private:
 	clock_t now = clock();
 	int questInterval;
 	vector<Tower*> allTower;
+	void changeWindow();
 
 public:
 	MapGame(wxFrame *parent);

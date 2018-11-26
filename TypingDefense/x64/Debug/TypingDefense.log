@@ -1,12 +1,73 @@
-﻿  Frame.cpp
-c:\typingdefense\typingdefense\frame.h(2): fatal error C1083: Cannot open include file: 'wx\wx.h': No such file or directory
+﻿  BasicTower.cpp
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
+  Bullet.cpp
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
+  Frame.cpp
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
   Main.cpp
-c:\typingdefense\typingdefense\main.cpp(1): fatal error C1083: Cannot open include file: 'wx\wx.h': No such file or directory
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
   MapGame.cpp
-c:\typingdefense\typingdefense\mapgame.h(2): fatal error C1083: Cannot open include file: 'wx/wx.h': No such file or directory
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
   Monster.cpp
-c:\typingdefense\typingdefense\monster.h(2): fatal error C1083: Cannot open include file: 'wx/dcbuffer.h': No such file or directory
-  User.cpp
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
+  Quest.cpp
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
+  Tower.cpp
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
   Window.cpp
-c:\typingdefense\typingdefense\window.h(2): fatal error C1083: Cannot open include file: 'wx/wx.h': No such file or directory
+c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): error C3861: 'wxStrcoll': identifier not found
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(487): note: 'wxStrcoll': function was not declared in the template definition context and can be found only via argument-dependent lookup in the instantiation context
+  c:\lib\wxwidgets-3.0.4\include\wx\wxcrt.h(496): note: see reference to function template instantiation 'int wxStrcoll_String<const wchar_t*>(const wxString &,const T &)' being compiled
+          with
+          [
+              T=const wchar_t *
+          ]
   Generating Code...

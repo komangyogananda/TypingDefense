@@ -22,5 +22,4 @@ void Frame::setCurrentWindow(int a) {
 Frame::~Frame()
 {
 	delete window;
-	delete map;
 }
