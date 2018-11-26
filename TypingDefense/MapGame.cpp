@@ -5,6 +5,7 @@
 #include "Frame.h"
 #include <cctype>
 #include <cmath>
+#include <algorithm>
 
 BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_KEY_DOWN(MapGame::OnKeyDown)
@@ -170,12 +171,27 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		string pointer = (fmod(sec, 1) > 0.5 ? "|" : " ");
 		string stSec = to_string(sec);
 		for (int i = 0; i < 3; i++) stSec.pop_back();
+		pdc.SetPen(*wxWHITE_PEN);
+		pdc.SetBrush(wxColor(RGB(92, 51, 23)));
+		pdc.DrawRoundedRectangle(wxPoint(75, wxGetDisplaySize().GetHeight() - 275), 
+			wxSize(16 * ((this->quest)->getTarget()).size(), 220), 50);
+		pdc.SetTextForeground(RGB(255, 255, 255));
 		pdc.DrawText((this->quest)->getCurrent() + pointer, wxPoint(100, wxGetDisplaySize().GetHeight() - 150));
+		pdc.SetTextForeground(RGB(128, 128, 128));
 		pdc.DrawText((this->quest)->getTarget(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
+		if (sec > 50.0 / 100.0 * (double)this->questInterval / 1000.0)
+			pdc.SetTextForeground(RGB(0, 255, 0));
+		else if (sec > 25.0 / 100.0 * (double)this->questInterval / 1000.0)
+			pdc.SetTextForeground(RGB(255, 255, 0));
+		else pdc.SetTextForeground(RGB(255, 0, 0));
 		pdc.DrawText(stSec + " s" , wxPoint(100, wxGetDisplaySize().GetHeight() - 250));
 		pdc.SetTextForeground(RGB(0, 255, 0));
 		pdc.DrawText((this->quest)->getLCP(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
 		pdc.SetTextForeground(RGB(0, 0, 0));
+		if (((this->quest)->getCurrent()).size() == ((this->quest)->getTarget()).size()) {
+			pdc.SetTextForeground(RGB(255, 0, 0));
+			pdc.DrawText("MAX LIMIT REACHED!!" , wxPoint(100, wxGetDisplaySize().GetHeight() - 100));
+		}
 	}
 
 }
@@ -220,7 +236,8 @@ void MapGame::OnKeyDown(wxKeyEvent & event)
 
 void MapGame::OnChar(wxKeyEvent & event)
 {
-	if (event.GetKeyCode() >= -1 && event.GetKeyCode() <= 255 && isprint(event.GetKeyCode()))
+	if (event.GetKeyCode() >= -1 && event.GetKeyCode() <= 255 && isprint(event.GetKeyCode()) && 
+		((this->quest)->getCurrent()).size() < ((this->quest)->getTarget()).size())
 		(this->quest)->addCurrent(event.GetKeyCode());
 	else event.Skip();
 }
