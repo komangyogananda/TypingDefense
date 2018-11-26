@@ -185,9 +185,9 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		pdc.SetTextForeground(RGB(128, 128, 128));
 		pdc.DrawText((this->quest)->getTarget(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
 		if (sec > 50.0 / 100.0 * (double)this->questInterval / 1000.0)
-			pdc.SetTextForeground(RGB(0, 255, 0));
+			pdc.SetTextForeground(RGB(255.0 * 2.0 * (1.0 - (sec * 1000.0 / (double)this->questInterval)), 255, 0));
 		else if (sec > 25.0 / 100.0 * (double)this->questInterval / 1000.0)
-			pdc.SetTextForeground(RGB(255, 255, 0));
+			pdc.SetTextForeground(RGB(255, 255 * (1.0 - 4.0 * (0.5 - (sec * 1000.0 / (double)this->questInterval))), 0));
 		else pdc.SetTextForeground(RGB(255, 0, 0));
 		pdc.DrawText(stSec + " s" , wxPoint(135, wxGetDisplaySize().GetHeight() - 247));
 		pdc.SetTextForeground(RGB(0, 255, 0));
