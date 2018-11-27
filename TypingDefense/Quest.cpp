@@ -4,10 +4,20 @@
 
 void Quest::initWords()
 {
-	ifstream file("words.txt");
+	ifstream in;
+	in.open("words.txt");
 	string line;
-	while (getline(file, line))
+	while (getline(in, line))
 		randomTarget.push_back(line);
+	in.close();
+	in.open("error.txt");
+	while (getline(in, line))
+		randomError.push_back(line);
+	in.close();
+	in.open("success.txt");
+	while (getline(in, line))
+		randomSuccess.push_back(line);
+	in.close();
 }
 
 void Quest::randomizeTarget()
@@ -65,6 +75,40 @@ void Quest::setLCP()
 		if (target[i] != current[i]) break;
 		LCP.push_back(target[i]);
 	}
+}
+
+void Quest::setStatus(int s)
+{
+	status = s;
+}
+
+int Quest::getStatus()
+{
+	return status;
+}
+
+void Quest::randomizeErrorMessage()
+{
+	srand(time(0));
+	int idx = rand() % randomError.size();
+	errorMessage = randomError[idx];
+}
+
+void Quest::randomizeSuccessMessage()
+{
+	srand(time(0));
+	int idx = rand() % randomSuccess.size();
+	successMessage = randomSuccess[idx];
+}
+
+string Quest::getErrorMessage()
+{
+	return errorMessage;
+}
+
+string Quest::getSuccessMessage()
+{
+	return successMessage;
 }
 
 string Quest::getCurrent()

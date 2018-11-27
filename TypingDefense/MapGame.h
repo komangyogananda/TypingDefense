@@ -8,6 +8,7 @@
 #include "Quest.h"
 #include "BasicTower.h"
 #include "Bullet.h"
+#include <list>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ private:
 	DECLARE_EVENT_TABLE()
 	int w, h;
 	wxFrame* parent;
-	wxBitmap* background, *coin, *questClock;
+	wxBitmap* background, *coin, *questClock, *questImage1, *questImage2, *questImage3;
 	wxSize coinSize;
 	wxImage image;
 	wxButton *backToMainMenu;
@@ -38,6 +39,7 @@ private:
 	void drawHealthBar(wxBufferedPaintDC &pdc);
 	Quest *quest;
 	clock_t now = clock();
+	clock_t statusTimer;
 	int questInterval;
 	vector<Tower*> allTower;
 	void changeWindow();

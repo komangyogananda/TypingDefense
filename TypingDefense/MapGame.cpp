@@ -21,8 +21,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 {
 	this->SetFocus();
 	quest = new Quest();
+	this->quest->setStatus(0);
 	user = new User("Your Name");
-	user->lifePoint = 10;
+	user->lifePoint = 1000;
 	this->parent = parent;
 	this->parent->GetSize(&w, &h);
 	wxMessageOutputDebug().Printf("MAP GAME p %d %d\n", w, h);
@@ -33,7 +34,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	timer->Start(5);
 
 	questTimer = new wxTimer(this, 2001);
-	questTimer->Start(2000);
+	questTimer->Start(3000);
 	this->now = clock();
 	
 	backToMainMenu = new wxButton(this, 1003, wxT("Back To Main Menu"), wxPoint(w - 200, h - 200), wxDefaultSize);
@@ -60,6 +61,19 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image = loadLogo(wxT("\\clock.png"));
 	image.Rescale(25, 25);
 	questClock = new wxBitmap(image);
+
+
+	image = loadLogo(wxT("\\questImage1.png"));
+	image.Rescale(100, 100);
+	questImage1 = new wxBitmap(image);
+
+	image = loadLogo(wxT("\\questImage2.png"));
+	image.Rescale(100, 100);
+	questImage2 = new wxBitmap(image);
+
+	image = loadLogo(wxT("\\questImage3.png"));
+	image.Rescale(120, 120);
+	questImage3 = new wxBitmap(image);
 
 	image = loadLogo(wxT("\\snow.png"));
 	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
@@ -117,6 +131,9 @@ MapGame::~MapGame()
 	for (auto it : skill) {
 		delete it;
 	}
+	delete questImage1;
+	delete questImage2;
+	delete questImage3;
 	delete mapStatusBar;
 	delete background;
 	delete backToMainMenu;
@@ -184,11 +201,14 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 
 	if (!this->quest->getTarget().empty() && (this->quest)->check()) {
+		(this->quest)->setStatus(1);
 		user->money += (this->quest->getTarget()).size() * 5;
 		(this->quest)->clearCurrent();
 		(this->quest)->clearTarget();
 		(this->quest)->clearLCP();
 		questTimer->Start((rand() % 5 + 2) * 1000);
+		this->statusTimer = clock();
+		this->quest->randomizeSuccessMessage();
 	}
 
 	if (!this->quest->getTarget().empty()) {
@@ -200,10 +220,13 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		auto sec = (this->questInterval - tnow) / 1000;
 
 		if (sec <= 0) {
+			(this->quest)->setStatus(2);
 			this->quest->clearCurrent();
 			this->quest->clearTarget();
 			this->quest->clearLCP();
 			questTimer->Start((rand() % 5 + 2) * 1000);
+			this->statusTimer = clock();
+			this->quest->randomizeErrorMessage();
 		}
 
 		string pointer = (fmod(sec, 1) > 0.5 ? "|" : " ");
@@ -220,8 +243,9 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		pdc.SetTextForeground(RGB(255, 255, 255));
 		pdc.DrawText((this->quest)->getCurrent() + pointer, wxPoint(100, wxGetDisplaySize().GetHeight() - 150));
 		pdc.SetTextForeground(RGB(128, 128, 128));
-		pdc.DrawText((this->quest)->getTarget(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
-
+		pdc.DrawText((this->quest)->getTarget(), wxPoint(100, wxGetDisplaySize().GetHeight() - 180));
+		pdc.SetTextForeground(RGB(255, 255, 0));
+		pdc.DrawText(to_string((this->quest)->getTarget().size()) + " Coins", wxPoint(100, wxGetDisplaySize().GetHeight() - 215));
 		if (sec > 50.0 / 100.0 * (double)this->questInterval / 1000.0)
 			pdc.SetTextForeground(RGB(255.0 * 2.0 * (1.0 - (sec * 1000.0 / (double)this->questInterval)), 255, 0));
 		else if (sec > 25.0 / 100.0 * (double)this->questInterval / 1000.0)
@@ -230,15 +254,48 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 
 		pdc.DrawText(stSec + " s" , wxPoint(135, wxGetDisplaySize().GetHeight() - 247));
 		pdc.SetTextForeground(RGB(0, 255, 0));
-		pdc.DrawText((this->quest)->getLCP(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
+		pdc.DrawText((this->quest)->getLCP(), wxPoint(100, wxGetDisplaySize().GetHeight() - 180));
 		pdc.SetTextForeground(RGB(0, 0, 0));
 
 		if (((this->quest)->getCurrent()).size() == ((this->quest)->getTarget()).size()) {
 			pdc.SetTextForeground(RGB(255, 0, 0));
-			pdc.DrawText("MAX LIMIT REACHED!!" , wxPoint(100, wxGetDisplaySize().GetHeight() - 100));
+			pdc.DrawText("MAX LIMIT REACHED!!" , wxPoint(150, wxGetDisplaySize().GetHeight() - 100));
 		}
-
 	}
+	
+	double statusNow = (double)(clock() - this->statusTimer) / CLOCKS_PER_SEC;
+	wxMessageOutputDebug().Printf("status = %d", this->quest->getStatus());
+	if (this->quest->getStatus() == 0) {
+		pdc.DrawBitmap(*questImage1, wxPoint(50, wxGetDisplaySize().GetHeight() - 120));
+	}
+	else if (this->quest->getStatus() == 1) {
+		wxFont questFont(13, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+		pdc.SetFont(questFont);
+		pdc.SetPen(*wxWHITE_PEN);
+		pdc.SetBrush(wxColor(RGB(0, 255, 0)));
+		pdc.DrawBitmap(*questImage2, wxPoint(50, wxGetDisplaySize().GetHeight() - 120));
+		if (statusNow < 4) {
+			pdc.DrawRoundedRectangle(wxPoint(75, wxGetDisplaySize().GetHeight() - 220),
+				wxSize(20 * ((this->quest)->getSuccessMessage()).size(), 70), 10);
+			pdc.SetTextForeground(wxColor(*wxWHITE));
+			pdc.DrawText((this->quest)->getSuccessMessage(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
+		}
+		
+	}
+	else {
+		wxFont questFont(13, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+		pdc.SetFont(questFont);
+		pdc.SetPen(*wxWHITE_PEN);
+		pdc.SetBrush(wxColor(RGB(255, 0, 0)));
+		pdc.DrawBitmap(*questImage3, wxPoint(50, wxGetDisplaySize().GetHeight() - 150));
+		if (statusNow < 4) {
+			pdc.DrawRoundedRectangle(wxPoint(75, wxGetDisplaySize().GetHeight() - 220),
+				wxSize(20 * ((this->quest)->getErrorMessage()).size(), 70), 10);
+			pdc.SetTextForeground(wxColor(*wxWHITE));
+			pdc.DrawText((this->quest)->getErrorMessage(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
+		}
+	}
+	
 
 }
 
@@ -298,6 +355,7 @@ void MapGame::QuestGiver(wxTimerEvent & event)
 	this->quest->clearLCP();
 	this->quest->randomizeTarget();
 	this->now = clock();
+	this->quest->setStatus(0);
 	this->questInterval = ((double)(this->quest->getTarget()).size()) / 5 * 1000;
 	questTimer->Stop();
 }

@@ -15,8 +15,13 @@ private:
 	string current;
 	string target;
 	string LCP;
+	string errorMessage;
+	string successMessage;
 	int coorX = 100, coorY = 100;
 	vector<string> randomTarget;
+	vector<string> randomError;
+	vector<string> randomSuccess;
+	int status = 0;
 
 public:
 	void initWords();
@@ -29,6 +34,12 @@ public:
 	void remCurrent();
 	void setTarget(string s);
 	void setLCP();
+	void setStatus(int s);
+	int getStatus();
+	void randomizeErrorMessage();
+	void randomizeSuccessMessage();
+	string getErrorMessage();
+	string getSuccessMessage();
 	string getCurrent();
 	string getTarget();
 	string getLCP();
