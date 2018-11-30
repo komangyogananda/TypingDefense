@@ -9,6 +9,10 @@
 #include "BasicTower.h"
 #include "Bullet.h"
 #include <list>
+#include <wx/bmpbuttn.h>
+#include "SlowTower.h"
+#include "TauntTower.h"
+#include "StunTower.h"
 
 using namespace std;
 
@@ -25,6 +29,11 @@ private:
 	wxBitmap* background, *coin, *questClock, *questImage1, *questImage2, *questImage3;
 	wxSize coinSize;
 	wxImage image;
+	Tower *tower;
+	bool addBasicStatus = false;
+	bool addSlowStatus = false;
+	bool addStunStatus = false;
+	bool addTauntStatus = false;
 	wxButton *backToMainMenu;
 	wxStatusBar *mapStatusBar;
 	wxImage loadLogo(wxString path);

@@ -8,7 +8,7 @@ Bullet::Bullet(Monster *targetMonster, int x, int y, int damageGiven)
 	this->targetMonster = targetMonster;
 	r = 2;
 	this->damageGiven = damageGiven;
-	this->v = 4;
+	this->v = 5;
 	this->vx = 0;
 	this->vy = 0;
 }

@@ -12,7 +12,7 @@ BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_CHAR(MapGame::OnChar)
 	EVT_TIMER(2000, MapGame::OnTimer)
 	EVT_TIMER(2001, MapGame::QuestGiver)
-	EVT_BUTTON(1003, MapGame::OnButtonClick)
+	EVT_BUTTON(1001, MapGame::OnButtonClick)
 	EVT_LEFT_DOWN(MapGame::OnClick)
 	EVT_PAINT(MapGame::OnPaint)
 END_EVENT_TABLE()
@@ -23,29 +23,29 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	quest = new Quest();
 	this->quest->setStatus(0);
 	user = new User("Your Name");
-	user->lifePoint = 1000;
+	user->lifePoint = 500;
 	this->parent = parent;
 	this->parent->GetSize(&w, &h);
-	wxMessageOutputDebug().Printf("MAP GAME p %d %d\n", w, h);
-	wxMessageOutputDebug().Printf("MAP GAME %d %d\n", w, h);
+	/*wxMessageOutputDebug().Printf("MAP GAME p %d %d\n", w, h);
+	wxMessageOutputDebug().Printf("MAP GAME %d %d\n", w, h);*/
 	this->SetSize(wxSize(w, h));
 
 	timer = new wxTimer(this, 2000);
-	timer->Start(5);
+	timer->Start(10);
 
 	questTimer = new wxTimer(this, 2001);
 	questTimer->Start(3000);
 	this->now = clock();
 	
-	backToMainMenu = new wxButton(this, 1003, wxT("Back To Main Menu"), wxPoint(w - 200, h - 200), wxDefaultSize);
+	backToMainMenu = new wxButton(this, 1001, wxT("Back To Main Menu"), wxRealPoint(w - 200.431, h - 200.456), wxDefaultSize);
 	background = nullptr;
 	mapStatusBar = new wxStatusBar(this->parent, -1);
 	status = "default";
 	this->parent->SetStatusBar(mapStatusBar);
-	Monster *test = new Monster(this, 100, 100, 0, wxGetDisplaySize().GetHeight() / 2, 1);
+	Monster *test = new Monster(this, 100, 100, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
 	allMonster.push_back(test);
 
-	Tower *tower = new BasicTower(1300, 450, allMonster, allBullet);
+	tower = new StunTower(1300, 450, allMonster);
 	allTower.push_back(tower);
 
 	image = loadLogo(wxT("\\Map.png"));
@@ -80,8 +80,8 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	wxBitmap *skillCurr = new wxBitmap(image);
 	skill.push_back(skillCurr);
 	koordinatBox skillNow;
-	skillNow.x1 = 3 * w / 4;
-	skillNow.x2 = 3 * w / 4 + (image.GetWidth());
+	skillNow.x1 = 2 * w / 3;
+	skillNow.x2 = 2 * w / 3 + (image.GetWidth());
 	skillNow.y1 = 9 * h / 10;
 	skillNow.y2 = 9 * h / 10 + (image.GetHeight());
 	skillButton.push_back(skillNow);
@@ -90,7 +90,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
 	skillCurr = new wxBitmap(image);
 	skill.push_back(skillCurr);
-	int next = 3 * w / 4 + image.GetWidth() + 10;
+	int next = 2 * w / 3 + image.GetWidth() + 10;
 	skillNow.x1 = next;
 	skillNow.x2 = next + (image.GetWidth());
 	skillNow.y1 = 9 * h / 10;
@@ -107,6 +107,51 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	skillNow.y1 = 9 * h / 10;
 	skillNow.y2 = 9 * h / 10 + (image.GetHeight());
 	skillButton.push_back(skillNow);
+	next += 10 + image.GetWidth();
+
+	image = loadLogo(wxT("\\basictower.png"));
+	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
+	skillCurr = new wxBitmap(image);
+	skill.push_back(skillCurr);
+	skillNow.x1 = next;
+	skillNow.x2 = next + (image.GetWidth());
+	skillNow.y1 = 9 * h / 10;
+	skillNow.y2 = 9 * h / 10 + (image.GetHeight());
+	skillButton.push_back(skillNow);
+	next += 10 + image.GetWidth();
+
+	image = loadLogo(wxT("\\slowtower.png"));
+	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
+	skillCurr = new wxBitmap(image);
+	skill.push_back(skillCurr);
+	skillNow.x1 = next;
+	skillNow.x2 = next + (image.GetWidth());
+	skillNow.y1 = 9 * h / 10;
+	skillNow.y2 = 9 * h / 10 + (image.GetHeight());
+	skillButton.push_back(skillNow);
+	next += 10 + image.GetWidth();
+
+	image = loadLogo(wxT("\\taunttower.png"));
+	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
+	skillCurr = new wxBitmap(image);
+	skill.push_back(skillCurr);
+	skillNow.x1 = next;
+	skillNow.x2 = next + (image.GetWidth());
+	skillNow.y1 = 9 * h / 10;
+	skillNow.y2 = 9 * h / 10 + (image.GetHeight());
+	skillButton.push_back(skillNow);
+	next += 10 + image.GetWidth();
+
+	image = loadLogo(wxT("\\stuntower.png"));
+	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
+	skillCurr = new wxBitmap(image);
+	skill.push_back(skillCurr);
+	skillNow.x1 = next;
+	skillNow.x2 = next + (image.GetWidth());
+	skillNow.y1 = 9 * h / 10;
+	skillNow.y2 = 9 * h / 10 + (image.GetHeight());
+	skillButton.push_back(skillNow);
+	next += 10 + image.GetWidth();
 
 }
 
@@ -162,14 +207,14 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	pdc.DrawBitmap(*coin, wxPoint(9 * wxGetDisplaySize().GetWidth() / 10, 2));
 	coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin->GetWidth() + 10, 2);
 
-	for (int i = 0; i < skillButton.size(); i++) {
-		pdc.DrawBitmap(*skill[i], wxPoint(skillButton[i].x1, skillButton[i].y1), true);
-	}
-
 	drawHealthBar(pdc);
 
 	for (auto it : allTower) {
 		it->draw(pdc);
+	}
+
+	for (int i = 0; i < skillButton.size(); i++) {
+		pdc.DrawBitmap(*skill[i], wxPoint(skillButton[i].x1, skillButton[i].y1), true);
 	}
 
 	for (auto it = allBullet.begin(); it != allBullet.end(); it++) {
@@ -193,16 +238,20 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 					//changeWindow();
 				}
 			}
+			else {
+				user->money += 15;
+				user->score += 30;
+			}
 			delete *it;
 			it = allMonster.erase(it);
-			status = "y";
 			if (it == allMonster.end()) break;
 		}
 	}
 
 	if (!this->quest->getTarget().empty() && (this->quest)->check()) {
 		(this->quest)->setStatus(1);
-		user->money += (this->quest->getTarget()).size() * 5;
+		user->money += (this->quest->getTarget()).size();
+		user->score += (this->quest->getTarget()).size() * 2;
 		(this->quest)->clearCurrent();
 		(this->quest)->clearTarget();
 		(this->quest)->clearLCP();
@@ -264,7 +313,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 	
 	double statusNow = (double)(clock() - this->statusTimer) / CLOCKS_PER_SEC;
-	wxMessageOutputDebug().Printf("status = %d", this->quest->getStatus());
+	/*wxMessageOutputDebug().Printf("status = %d", this->quest->getStatus());*/
 	if (this->quest->getStatus() == 0) {
 		pdc.DrawBitmap(*questImage1, wxPoint(50, wxGetDisplaySize().GetHeight() - 120));
 	}
@@ -301,15 +350,76 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 
 void MapGame::OnClick(wxMouseEvent & event)
 {
+	bool yes = false;
 	int x = event.GetX();
 	int y = event.GetY();
 	status = "x = " + to_string(x) + " y = " + to_string(y);
-	for (int i = 0; i < skillButton.size(); i++) {
-		koordinatBox now = skillButton[i];
-		wxMessageOutputDebug().Printf("x1 = %d y1 = %d x2 = %d y2 = %d", now.x1, now.y1, now.x2, now.y2);
-		if (now.x1 <= x && x <= now.x2) {
-			if (now.y1 <= y && y <= now.y2) {
-				status = "Skill" + to_string(i + 1);
+
+	if (addBasicStatus && user->money >= 100) {
+		tower = new BasicTower(x, y, allMonster, allBullet);
+		allTower.push_back(tower);
+		user->money -= 80;
+		addBasicStatus = false;
+	}if (addBasicStatus && user->money < 100) {
+		status = "not enough money";
+		addBasicStatus = false;
+	}
+
+	if (addSlowStatus && user->money >= 100) {
+		tower = new SlowTower(x, y, allMonster);
+		allTower.push_back(tower);
+		user->money -= 80;
+		addSlowStatus = false;
+	}if (addSlowStatus && user->money < 100) {
+		status = "not enough money";
+		addSlowStatus = false;
+	}
+
+	if (addTauntStatus && user->money >= 100) {
+		tower = new TauntTower(x, y, allMonster);
+		allTower.push_back(tower);
+		user->money -= 80;
+		addTauntStatus = false;
+	}if (addTauntStatus && user->money < 100) {
+		status = "not enough money";
+		addTauntStatus = false;
+	}
+
+	if (addStunStatus && user->money >= 100) {
+		tower = new StunTower(x, y, allMonster);
+		allTower.push_back(tower);
+		user->money -= 80;
+		addStunStatus = false;
+	}if (addStunStatus && user->money < 100) {
+		status = "not enough money";
+		addStunStatus = false;
+	}
+
+	else {
+		for (int i = 0; i < skillButton.size(); i++) {
+			koordinatBox now = skillButton[i];
+			wxMessageOutputDebug().Printf("x1 = %d y1 = %d x2 = %d y2 = %d", now.x1, now.y1, now.x2, now.y2);
+			if (now.x1 <= x && x <= now.x2) {
+				if (now.y1 <= y && y <= now.y2) {
+					yes = true;
+					status = "Skill" + to_string(i + 1);
+					if (i == 3) {
+						addBasicStatus = true;
+						status = "Click to place your basic tower";
+					}
+					else if (i == 4) {
+						addSlowStatus = true;
+						status = "Click to place your slow tower";
+					}
+					else if (i == 5) {
+						addTauntStatus = true;
+						status = "Click to place your taunt tower";
+					}
+					else if (i == 6) {
+						addStunStatus = true;
+						status = "Click to place your status tower";
+					}
+				}
 			}
 		}
 	}
@@ -317,7 +427,7 @@ void MapGame::OnClick(wxMouseEvent & event)
 
 void MapGame::OnButtonClick(wxCommandEvent & event)
 {
-	if (event.GetId() == 1003) {
+	if (event.GetId() == 1001) {
 		changeWindow();
 	}
 }
@@ -328,7 +438,7 @@ void MapGame::OnTimer(wxTimerEvent &event) {
 		return;
 	}
 	for (auto it : allMonster) {
-		it->jalan(1, 0);
+		it->jalan();
 	}
 	Refresh(0);
 }
@@ -372,6 +482,6 @@ void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {
 	pdc.SetBrush(wxBrush(wxColour(255 * (user->maxLifePoint - user->lifePoint) / user->maxLifePoint, 255 * user->lifePoint / user->maxLifePoint, 0)));
 	pdc.SetPen(wxPen(wxColour(*wxWHITE)));
 	pdc.DrawText(user->nama, 5, 5);
-	pdc.DrawRoundedRectangle(5, wxGetDisplaySize().GetHeight() / 35,user->lifePoint*wxGetDisplaySize().GetWidth() / 3 / user->maxLifePoint, 20, 3);
+	pdc.DrawRoundedRectangle(5, wxGetDisplaySize().GetHeight() / 35, user->lifePoint*(wxGetDisplaySize().GetWidth() / 3) / user->maxLifePoint, 20, 3);
 	pdc.DrawText("Score: " + to_string(user->score), 5, wxGetDisplaySize().GetHeight() / 35 + 25);
 }

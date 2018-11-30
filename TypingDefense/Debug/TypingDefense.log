@@ -1,4 +1,6 @@
 ﻿  MapGame.cpp
-c:\typingdefense\typingdefense\mapgame.cpp(165): warning C4018: '<': signed/unsigned mismatch
-c:\typingdefense\typingdefense\mapgame.cpp(307): warning C4018: '<': signed/unsigned mismatch
-  TypingDefense.vcxproj -> C:\TypingDefense\Debug\TypingDefense.exe
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(216): warning C4018: '<': signed/unsigned mismatch
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(399): warning C4018: '<': signed/unsigned mismatch
+  SlowTower.cpp
+  Generating Code...
+  TypingDefense.vcxproj -> C:\Users\komangyogananda\source\repos\TypingDefense\Debug\TypingDefense.exe

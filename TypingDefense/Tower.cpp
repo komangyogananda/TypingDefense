@@ -6,15 +6,15 @@ double Tower::jarak(Monster * monsterNear)
 	return res;
 }
 
-Tower::Tower(int x, int y, vector<Monster*> *allMonster, vector<Bullet*> *allBullet)
+Tower::Tower(int x, int y, vector<Monster*> *allMonster)
 {
 	this->attackPoint = 10;
 	this->x = x;
 	this->y = y;
-	this->radius = 100;
+	this->radius = 140;
+	this->s = 30;
 	level = 1;
 	this->allMonster = allMonster;
-	this->allBullet = allBullet;
 }
 
 

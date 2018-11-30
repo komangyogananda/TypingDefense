@@ -1,8 +1,14 @@
 #include "Monster.h"
 #include "MapGame.h"
+#include "Tower.h"
+
+BEGIN_EVENT_TABLE(Monster, wxEvtHandler)
+	EVT_TIMER(-1, Monster::OnTimer)
+END_EVENT_TABLE()
 
 Monster::~Monster()
 {
+	delete timer;
 }
 
 void Monster::moveX(int point)
@@ -15,7 +21,35 @@ void Monster::moveY(int point)
 	this->y += point;
 }
 
-Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int level)
+void Monster::followTarget()
+{
+	double sX = targetX - this->x;
+	double sY = targetY - this->y;
+	double sMiring = sqrt(pow(sX, 2) + pow(sY, 2));
+	double ratio = (double)this->v / sMiring;
+	double tempVx = ratio * sX;
+	double tempVy = ratio * sY;
+	vx = round(tempVx);
+	vy = round(tempVy);
+	vx = vx * (100-slow) / 100;
+	vy = vy * (100-slow) / 100;
+}
+
+void Monster::OnTimer(wxTimerEvent & event)
+{
+	static int taunt = 0;
+	static int stun = 0;
+	if (tauntStatus && ++taunt % 3 == 0) {
+		setTarget(-1, -1);
+		tauntStatus = false;
+	}
+	if (stunStatus && ++stun % 3 == 0) {
+		setSlow(0);
+		stunStatus = false;
+	}
+}
+
+Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int targetX, int targetY, int level)
 {
 	map = mapGame;
 	this->maxHealthPoint = maxHealthPoint;
@@ -24,12 +58,19 @@ Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, i
 	this->x = x;
 	this->y = y;
 	this->level = level;
+	this->targetX = targetX;
+	this->targetY = targetY;
+	this->slow = 0;
+	timer = new wxTimer(this, -1);
+	timer->Start(1000);
 }
 
-void Monster::jalan(int x, int y)
+void Monster::jalan()
 {
-	moveX(x);
-	moveY(y);
+	followTarget();
+	//wxMessageOutputDebug().Printf("%d %d", vx, vy);
+	moveX(vx);
+	moveY(vy);
 }
 
 int Monster::draw(wxBufferedPaintDC &pdc) {
@@ -72,6 +113,61 @@ void Monster::getDamage(int damage)
 {
 	this->healthPoint -= damage;
 	if (this->healthPoint < 0) this->healthPoint = 0;
+}
+
+void Monster::setSlow(int slow)
+{
+	this->slow = slow;
+}
+
+void Monster::setTarget(int x, int y)
+{
+	this->targetX = x;
+	this->targetY = y;
+	if (x == -1 && y == -1) {
+		int w, h;
+		map->GetSize(&w, &h);
+		this->targetX = w;
+		this->targetY = h / 2;
+	}
+}
+
+void Monster::tauntedBy(Tower* taunt)
+{
+	tauntStatus = true;
+	tauntTower.push_back(taunt);
+}
+
+void Monster::stunnedBy(Tower * stun)
+{
+	stunStatus = true;
+	stunTower.push_back(stun);
+}
+
+bool Monster::checkTaunt(Tower * taunt)
+{
+	for (auto it : tauntTower) {
+		if (it == taunt) return false;
+	}
+	return true;
+}
+
+bool Monster::checkStun(Tower * stun)
+{
+	for (auto it : stunTower) {
+		if (it == stun) return false;
+	}
+	return true;
+}
+
+bool Monster::getTauntStatus()
+{
+	return tauntStatus;
+}
+
+bool Monster::getStunStatus()
+{
+	return stunStatus;
 }
 
 bool Monster::attack() {

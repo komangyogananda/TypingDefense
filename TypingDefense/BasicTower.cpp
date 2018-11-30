@@ -6,15 +6,18 @@ END_EVENT_TABLE()
 
 void BasicTower::attack(wxTimerEvent &event)
 {
-	if (focusedMonster == nullptr && !(*allMonster).empty()) {
-		if (jarak((*allMonster)[0]) <= radius) {
-			focusedMonster = (*allMonster)[0];
-		}
-		else {
-			focusedMonster = nullptr;
-		}
-	}else if (focusedMonster != nullptr && jarak(focusedMonster) - focusedMonster->getRadius() > radius) {
+	if (focusedMonster != nullptr && jarak(focusedMonster) > radius) {
 		focusedMonster = nullptr;
+	}
+	if (focusedMonster == nullptr && !(*allMonster).empty()) {
+		double mn = 10000.0;
+		for (auto it : (*allMonster)) {
+			double curr = jarak(it);
+			if (curr <= radius && curr < mn) {
+				mn = jarak(it);
+				focusedMonster = it;
+			}
+		}
 	}
 	if (focusedMonster != nullptr) {
 		bullet = new Bullet(focusedMonster, this->x, this->y, this->attackPoint);
@@ -24,16 +27,17 @@ void BasicTower::attack(wxTimerEvent &event)
 
 void BasicTower::draw(wxBufferedPaintDC & pdc)
 {
-	pdc.SetBrush(wxBrush(wxColour(0, 0, 255)));
-	pdc.DrawRectangle(wxPoint(x, y), wxSize(radius/2,radius/2));
+	pdc.SetBrush(wxBrush(wxColour(255, 0, 0)));
+	pdc.DrawRectangle(wxPoint(x - s / 2, y - s / 2), wxSize(s, s));
 	pdc.SetBrush(wxBrush(wxColour(255, 255, 255), wxBRUSHSTYLE_TRANSPARENT));
-	pdc.DrawCircle(wxPoint(x + radius / 4, y + radius / 4), this->radius);
+	pdc.DrawCircle(wxPoint(x, y), this->radius);
 }
 
-BasicTower::BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet) : Tower(x, y, &allMonster, &allBullet)
+BasicTower::BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
+	this->allBullet = &allBullet;
 }
 
 

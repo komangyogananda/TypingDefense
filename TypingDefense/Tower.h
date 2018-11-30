@@ -12,13 +12,11 @@ class Tower : public wxEvtHandler
 {
 protected:
 	int attackPoint, radius, level;
-	int x, y;
-	Monster *focusedMonster = nullptr;
+	int x, y, s;
 	vector<Monster*> *allMonster;
-	vector<Bullet*> *allBullet;
 	double jarak(Monster* monsterNear);
 public:
-	Tower(int x, int y, vector<Monster*> *allMonster, vector<Bullet*> *allBullet);
+	Tower(int x, int y, vector<Monster*> *allMonster);
 	~Tower();
 	virtual void draw(wxBufferedPaintDC &pdc) = 0;
 };

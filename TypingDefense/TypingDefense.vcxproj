@@ -134,6 +134,9 @@
     <ClCompile Include="MapGame.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="SlowTower.cpp" />
+    <ClCompile Include="StunTower.cpp" />
+    <ClCompile Include="TauntTower.cpp" />
     <ClCompile Include="Tower.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -145,6 +148,9 @@
     <ClInclude Include="MapGame.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Quest.h" />
+    <ClInclude Include="SlowTower.h" />
+    <ClInclude Include="StunTower.h" />
+    <ClInclude Include="TauntTower.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="Window.h" />

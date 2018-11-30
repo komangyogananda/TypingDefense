@@ -45,6 +45,15 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SlowTower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TauntTower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StunTower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frame.h">
@@ -72,6 +81,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SlowTower.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TauntTower.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StunTower.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
