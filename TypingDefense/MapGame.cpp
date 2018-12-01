@@ -355,6 +355,37 @@ void MapGame::OnClick(wxMouseEvent & event)
 	int y = event.GetY();
 	status = "x = " + to_string(x) + " y = " + to_string(y);
 
+	for (int i = 0; i < skillButton.size(); i++) {
+		koordinatBox now = skillButton[i];
+		wxMessageOutputDebug().Printf("x1 = %d y1 = %d x2 = %d y2 = %d", now.x1, now.y1, now.x2, now.y2);
+		if (now.x1 <= x && x <= now.x2) {
+			if (now.y1 <= y && y <= now.y2) {
+				yes = true;
+				status = "Skill" + to_string(i + 1);
+				if (i == 3) {
+					addBasicStatus = true;
+					status = "Click to place your basic tower";
+					return;
+				}
+				else if (i == 4) {
+					addSlowStatus = true;
+					status = "Click to place your slow tower";
+					return;
+				}
+				else if (i == 5) {
+					addTauntStatus = true;
+					status = "Click to place your taunt tower";
+					return;
+				}
+				else if (i == 6) {
+					addStunStatus = true;
+					status = "Click to place your status tower";
+					return;
+				}
+			}
+		}
+	}
+
 	if (addBasicStatus && user->money >= 100) {
 		tower = new BasicTower(x, y, allMonster, allBullet);
 		allTower.push_back(tower);
@@ -395,34 +426,6 @@ void MapGame::OnClick(wxMouseEvent & event)
 		addStunStatus = false;
 	}
 
-	else {
-		for (int i = 0; i < skillButton.size(); i++) {
-			koordinatBox now = skillButton[i];
-			wxMessageOutputDebug().Printf("x1 = %d y1 = %d x2 = %d y2 = %d", now.x1, now.y1, now.x2, now.y2);
-			if (now.x1 <= x && x <= now.x2) {
-				if (now.y1 <= y && y <= now.y2) {
-					yes = true;
-					status = "Skill" + to_string(i + 1);
-					if (i == 3) {
-						addBasicStatus = true;
-						status = "Click to place your basic tower";
-					}
-					else if (i == 4) {
-						addSlowStatus = true;
-						status = "Click to place your slow tower";
-					}
-					else if (i == 5) {
-						addTauntStatus = true;
-						status = "Click to place your taunt tower";
-					}
-					else if (i == 6) {
-						addStunStatus = true;
-						status = "Click to place your status tower";
-					}
-				}
-			}
-		}
-	}
 }
 
 void MapGame::OnButtonClick(wxCommandEvent & event)

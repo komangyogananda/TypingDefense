@@ -10,11 +10,11 @@ void SlowTower::slow(wxTimerEvent &event)
 		for (auto it : (*allMonster)) {
 			if (jarak(it) <= radius) {
 				it->setSlow(30);
-				if (it->getStunStatus()) it->setSlow(100);
 			}
 			else {
 				it->setSlow(0);
 			}
+			if (it->getStunStatus()) it->setSlow(100);
 		}
 	}
 }

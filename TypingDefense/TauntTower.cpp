@@ -8,7 +8,7 @@ void TauntTower::taunt(wxTimerEvent &event)
 {
 	if (!(*allMonster).empty()) {
 		for (auto it : (*allMonster)) {
-			if (jarak(it) <= radius && !it->getTauntStatus() && it->checkTaunt(this)) {
+			if (jarak(it) <= radius && !it->getTauntStatus() && it->checkTaunt(this) && !it->getStunStatus()) {
 				it->setTarget(this->x, this->y);
 				it->tauntedBy(this);
 			}else if (it->getTauntStatus()) {
