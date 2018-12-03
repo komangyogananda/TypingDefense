@@ -11,7 +11,6 @@ private:
 public:
 	StunTower(int x, int y, vector<Monster*> &allMonster);
 	~StunTower();
-	void stun(wxTimerEvent &event);
-	void draw(wxBufferedPaintDC &pdc);
+	void skill(wxTimerEvent &event);
 };
 

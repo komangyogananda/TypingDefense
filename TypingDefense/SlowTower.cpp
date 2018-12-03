@@ -1,10 +1,10 @@
 #include "SlowTower.h"
 
 BEGIN_EVENT_TABLE(SlowTower, wxEvtHandler)
-	EVT_TIMER(-1, SlowTower::slow)
+	EVT_TIMER(-1, SlowTower::skill)
 END_EVENT_TABLE()
 
-void SlowTower::slow(wxTimerEvent &event)
+void SlowTower::skill(wxTimerEvent &event)
 {
 	if (!(*allMonster).empty()) {
 		for (auto it : (*allMonster)) {
@@ -19,18 +19,13 @@ void SlowTower::slow(wxTimerEvent &event)
 	}
 }
 
-void SlowTower::draw(wxBufferedPaintDC & pdc)
-{
-	pdc.SetBrush(wxBrush(wxColour(0, 0, 255)));
-	pdc.DrawRectangle(wxPoint(x - s / 2, y - s / 2), wxSize(s, s));
-	pdc.SetBrush(wxBrush(wxColour(255, 255, 255), wxBRUSHSTYLE_TRANSPARENT));
-	pdc.DrawCircle(wxPoint(x, y), this->radius);
-}
-
 SlowTower::SlowTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(10);
+	this->r = 0;
+	this->g = 0;
+	this->b = 255;
 }
 
 

@@ -11,7 +11,6 @@ private:
 public:
 	SlowTower(int x, int y, vector<Monster*> &allMonster);
 	~SlowTower();
-	void slow(wxTimerEvent &event);
-	void draw(wxBufferedPaintDC &pdc);
+	void skill(wxTimerEvent &event);
 };
 

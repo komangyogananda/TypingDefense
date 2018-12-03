@@ -11,7 +11,6 @@ private:
 public:
 	TauntTower(int x, int y, vector<Monster*> &allMonster);
 	~TauntTower();
-	void taunt(wxTimerEvent &event);
-	void draw(wxBufferedPaintDC &pdc);
+	void skill(wxTimerEvent &event);
 };
 

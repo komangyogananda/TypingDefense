@@ -1,10 +1,10 @@
 #include "StunTower.h"
 
 BEGIN_EVENT_TABLE(StunTower, wxEvtHandler)
-	EVT_TIMER(-1, StunTower::stun)
+	EVT_TIMER(-1, StunTower::skill)
 END_EVENT_TABLE()
 
-void StunTower::stun(wxTimerEvent &event)
+void StunTower::skill(wxTimerEvent &event)
 {
 	if (!(*allMonster).empty()) {
 		for (auto it : (*allMonster)) {
@@ -22,18 +22,13 @@ void StunTower::stun(wxTimerEvent &event)
 	}
 }
 
-void StunTower::draw(wxBufferedPaintDC & pdc)
-{
-	pdc.SetBrush(wxBrush(wxColour(0, 0, 0)));
-	pdc.DrawRectangle(wxPoint(x - s / 2, y - s / 2), wxSize(s, s));
-	pdc.SetBrush(wxBrush(wxColour(255, 255, 255), wxBRUSHSTYLE_TRANSPARENT));
-	pdc.DrawCircle(wxPoint(x, y), this->radius);
-}
-
 StunTower::StunTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
+	this->r = 0;
+	this->g = 0;
+	this->b = 0;
 }
 
 

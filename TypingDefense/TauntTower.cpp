@@ -1,10 +1,10 @@
 #include "TauntTower.h"
 
 BEGIN_EVENT_TABLE(TauntTower, wxEvtHandler)
-	EVT_TIMER(-1, TauntTower::taunt)
+	EVT_TIMER(-1, TauntTower::skill)
 END_EVENT_TABLE()
 
-void TauntTower::taunt(wxTimerEvent &event)
+void TauntTower::skill(wxTimerEvent &event)
 {
 	if (!(*allMonster).empty()) {
 		for (auto it : (*allMonster)) {
@@ -19,19 +19,14 @@ void TauntTower::taunt(wxTimerEvent &event)
 		}
 	}
 }
- 
-void TauntTower::draw(wxBufferedPaintDC & pdc)
-{
-	pdc.SetBrush(wxBrush(wxColour(0, 255, 0)));
-	pdc.DrawRectangle(wxPoint(x - s / 2, y - s / 2), wxSize(s, s));
-	pdc.SetBrush(wxBrush(wxColour(255, 255, 255), wxBRUSHSTYLE_TRANSPARENT));
-	pdc.DrawCircle(wxPoint(x, y), this->radius);
-}
 
 TauntTower::TauntTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
+	this->r = 0;
+	this->g = 255;
+	this->b = 0;
 }
 
 

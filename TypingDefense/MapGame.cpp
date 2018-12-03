@@ -5,6 +5,8 @@
 #include "Frame.h"
 #include <cctype>
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 #include <algorithm>
 
 BEGIN_EVENT_TABLE(MapGame, wxWindow)
@@ -12,6 +14,7 @@ BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_CHAR(MapGame::OnChar)
 	EVT_TIMER(2000, MapGame::OnTimer)
 	EVT_TIMER(2001, MapGame::QuestGiver)
+	EVT_TIMER(2002, MapGame::SpawnMonster)
 	EVT_BUTTON(1001, MapGame::OnButtonClick)
 	EVT_LEFT_DOWN(MapGame::OnClick)
 	EVT_PAINT(MapGame::OnPaint)
@@ -19,19 +22,26 @@ END_EVENT_TABLE()
 
 MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 {
+
+	srand(time(0));
+
 	this->SetFocus();
+	
 	quest = new Quest();
 	this->quest->setStatus(0);
+	
 	user = new User("Your Name");
 	user->lifePoint = 500;
+
 	this->parent = parent;
 	this->parent->GetSize(&w, &h);
-	/*wxMessageOutputDebug().Printf("MAP GAME p %d %d\n", w, h);
-	wxMessageOutputDebug().Printf("MAP GAME %d %d\n", w, h);*/
 	this->SetSize(wxSize(w, h));
 
 	timer = new wxTimer(this, 2000);
 	timer->Start(10);
+
+	spawnTimer = new wxTimer(this, 2002);
+	spawnTimer->Start(8000);
 
 	questTimer = new wxTimer(this, 2001);
 	questTimer->Start(3000);
@@ -42,7 +52,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	mapStatusBar = new wxStatusBar(this->parent, -1);
 	status = "default";
 	this->parent->SetStatusBar(mapStatusBar);
-	Monster *test = new Monster(this, 100, 100, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
+	Monster *test = new Monster(this, 100, 35, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
 	allMonster.push_back(test);
 
 	tower = new StunTower(1300, 450, allMonster);
@@ -153,6 +163,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	skillButton.push_back(skillNow);
 	next += 10 + image.GetWidth();
 
+	this->placeholder = nullptr;
 }
 
 void MapGame::changeWindow()
@@ -160,6 +171,14 @@ void MapGame::changeWindow()
 	Frame * currFrame = (Frame*)parent;
 	currFrame->setCurrentWindow(1);
 	return;
+}
+
+int MapGame::randNum(int low, int high)
+{
+	int ans = 0;
+	int md = high - low + 1;
+	ans = (rand() % md) + low;
+	return ans;
 }
 
 MapGame::~MapGame()
@@ -188,6 +207,7 @@ MapGame::~MapGame()
 	delete user;
 	delete coin;
 	delete questClock;
+	delete spawnTimer;
 }
 
 wxImage MapGame::loadLogo(wxString path) {
@@ -208,6 +228,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin->GetWidth() + 10, 2);
 
 	drawHealthBar(pdc);
+	drawPlaceholderTower(pdc);
 
 	for (auto it : allTower) {
 		it->draw(pdc);
@@ -364,21 +385,25 @@ void MapGame::OnClick(wxMouseEvent & event)
 				status = "Skill" + to_string(i + 1);
 				if (i == 3) {
 					addBasicStatus = true;
+					drawPlaceholder = true;
 					status = "Click to place your basic tower";
 					return;
 				}
 				else if (i == 4) {
 					addSlowStatus = true;
+					drawPlaceholder = true;
 					status = "Click to place your slow tower";
 					return;
 				}
 				else if (i == 5) {
 					addTauntStatus = true;
+					drawPlaceholder = true;
 					status = "Click to place your taunt tower";
 					return;
 				}
 				else if (i == 6) {
 					addStunStatus = true;
+					drawPlaceholder = true;
 					status = "Click to place your status tower";
 					return;
 				}
@@ -387,41 +412,65 @@ void MapGame::OnClick(wxMouseEvent & event)
 	}
 
 	if (addBasicStatus && user->money >= 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		tower = new BasicTower(x, y, allMonster, allBullet);
 		allTower.push_back(tower);
 		user->money -= 80;
 		addBasicStatus = false;
 	}if (addBasicStatus && user->money < 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		status = "not enough money";
 		addBasicStatus = false;
 	}
 
 	if (addSlowStatus && user->money >= 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		tower = new SlowTower(x, y, allMonster);
 		allTower.push_back(tower);
 		user->money -= 80;
 		addSlowStatus = false;
 	}if (addSlowStatus && user->money < 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		status = "not enough money";
 		addSlowStatus = false;
 	}
 
 	if (addTauntStatus && user->money >= 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		tower = new TauntTower(x, y, allMonster);
 		allTower.push_back(tower);
 		user->money -= 80;
 		addTauntStatus = false;
 	}if (addTauntStatus && user->money < 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		status = "not enough money";
 		addTauntStatus = false;
 	}
 
 	if (addStunStatus && user->money >= 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		tower = new StunTower(x, y, allMonster);
 		allTower.push_back(tower);
 		user->money -= 80;
 		addStunStatus = false;
 	}if (addStunStatus && user->money < 100) {
+		drawPlaceholder = false;
+		delete placeholder;
+		placeholder = nullptr;
 		status = "not enough money";
 		addStunStatus = false;
 	}
@@ -473,6 +522,27 @@ void MapGame::QuestGiver(wxTimerEvent & event)
 	questTimer->Stop();
 }
 
+void MapGame::SpawnMonster(wxTimerEvent & event)
+{
+	Monster *spawn;
+	int location = randNum(1, 3);
+	int targetY = randNum(0.25*h, 0.68*h);
+	if (location == 1) {
+		int y = randNum(0.32*h, 0.5*h);
+		spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
+	}
+	else if (location == 2) {
+		int x = randNum(0.5*w, 0.62*w);
+		spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
+	}
+	else if (location == 3) {
+		int x = randNum(0.5*w, 0.62*w);
+		spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
+	}
+	allMonster.push_back(spawn);
+	spawnTimer->Start(1000*randNum(8, 10));
+}
+
 void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {
 
 	wxFont fontNama(16, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -487,4 +557,60 @@ void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {
 	pdc.DrawText(user->nama, 5, 5);
 	pdc.DrawRoundedRectangle(5, wxGetDisplaySize().GetHeight() / 35, user->lifePoint*(wxGetDisplaySize().GetWidth() / 3) / user->maxLifePoint, 20, 3);
 	pdc.DrawText("Score: " + to_string(user->score), 5, wxGetDisplaySize().GetHeight() / 35 + 25);
+}
+
+void MapGame::drawPlaceholderTower(wxBufferedPaintDC & pdc)
+{
+	wxMouseState mouse = wxGetMouseState();
+	if (!mouse.LeftIsDown()) {
+		wxMessageOutputDebug().Printf("ay");
+		int x = wxGetMousePosition().x;
+		int y = wxGetMousePosition().y;
+
+		if (placeholder != nullptr) {
+			placeholder->setX(x);
+			placeholder->setY(y);
+		}
+		else {
+			if (addBasicStatus && user->money >= 100) {
+				placeholder = new BasicTower(x, y, allMonster, allBullet);
+				drawPlaceholder = true;
+			}
+			else if (addBasicStatus) {
+				status = "not enough money";
+				addBasicStatus = false;
+			}
+
+			if (addSlowStatus && user->money >= 100) {
+				placeholder = new SlowTower(x, y, allMonster);
+				drawPlaceholder = true;
+			}
+			else if (addSlowStatus) {
+				status = "not enough money";
+				addBasicStatus = false;
+			}
+
+			if (addTauntStatus && user->money >= 100) {
+				placeholder = new TauntTower(x, y, allMonster);
+				drawPlaceholder = true;
+			}
+			else if (addTauntStatus) {
+				status = "not enough money";
+				addBasicStatus = false;
+			}
+
+			if (addStunStatus && user->money >= 100) {
+				placeholder = new StunTower(x, y, allMonster);
+				drawPlaceholder = true;
+			}
+			else if (addStunStatus) {
+				status = "not enough money";
+				addBasicStatus = false;
+			}
+		}
+
+		if (drawPlaceholder && placeholder != nullptr) {
+			placeholder->drawPlaceholder(pdc);
+		}
+	}
 }

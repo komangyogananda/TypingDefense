@@ -29,7 +29,8 @@ private:
 	wxBitmap* background, *coin, *questClock, *questImage1, *questImage2, *questImage3;
 	wxSize coinSize;
 	wxImage image;
-	Tower *tower;
+	Tower *tower, *placeholder;
+	bool drawPlaceholder = false;
 	bool addBasicStatus = false;
 	bool addSlowStatus = false;
 	bool addStunStatus = false;
@@ -43,15 +44,18 @@ private:
 	vector<Bullet*> allBullet;
 	wxTimer *timer;
 	wxTimer *questTimer;
+	wxTimer *spawnTimer;
 	string status;
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
+	void drawPlaceholderTower(wxBufferedPaintDC &pdc);
 	Quest *quest;
 	clock_t now = clock();
 	clock_t statusTimer;
 	int questInterval;
 	vector<Tower*> allTower;
 	void changeWindow();
+	int randNum(int low, int high);
 
 public:
 	MapGame(wxFrame *parent);
@@ -63,5 +67,6 @@ public:
 	void OnKeyDown(wxKeyEvent &event);
 	void OnChar(wxKeyEvent &event);
 	void QuestGiver(wxTimerEvent &event);
+	void SpawnMonster(wxTimerEvent &event);
 };
 
