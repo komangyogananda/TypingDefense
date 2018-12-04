@@ -343,7 +343,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 	
 	double statusNow = (double)(clock() - this->statusTimer) / CLOCKS_PER_SEC;
-	/*wxMessageOutputDebug().Printf("status = %d", this->quest->getStatus());*/
+	
 	if (this->quest->getStatus() == 0) {
 		pdc.DrawBitmap(*questImage1, wxPoint(50, wxGetDisplaySize().GetHeight() - 120));
 	}
@@ -572,7 +572,7 @@ void MapGame::drawPlaceholderTower(wxBufferedPaintDC & pdc)
 {
 	wxMouseState mouse = wxGetMouseState();
 	if (!mouse.LeftIsDown()) {
-		//wxMessageOutputDebug().Printf("ay");
+
 		int x = wxGetMousePosition().x;
 		int y = wxGetMousePosition().y;
 
