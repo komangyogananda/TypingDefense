@@ -85,6 +85,12 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image.Rescale(120, 120);
 	questImage3 = new wxBitmap(image);
 
+	for (int i = 1; i < 13; i++) {
+		image = loadLogo(wxT("\\monster\\monster" + to_string(i) + ".png"));
+		image.Rescale(70, 70);
+		animationMonster.push_back(new wxBitmap(image));
+	}
+
 	image = loadLogo(wxT("\\snow.png"));
 	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
 	wxBitmap *skillCurr = new wxBitmap(image);
@@ -195,6 +201,9 @@ MapGame::~MapGame()
 	for (auto it : skill) {
 		delete it;
 	}
+	for (auto it : animationMonster) {
+		delete it;
+	}
 	delete questImage1;
 	delete questImage2;
 	delete questImage3;
@@ -250,7 +259,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 
 	for (auto it = allMonster.begin(); it != allMonster.end(); it++) {
-		int kondisi = (*it)->draw(pdc);
+		int kondisi = (*it)->draw(pdc, &animationMonster);
 		if (kondisi != -1) {
 			if (kondisi != 0) {
 				user->lifePoint -= (*it)->attackPoint;
@@ -563,7 +572,7 @@ void MapGame::drawPlaceholderTower(wxBufferedPaintDC & pdc)
 {
 	wxMouseState mouse = wxGetMouseState();
 	if (!mouse.LeftIsDown()) {
-		wxMessageOutputDebug().Printf("ay");
+		//wxMessageOutputDebug().Printf("ay");
 		int x = wxGetMousePosition().x;
 		int y = wxGetMousePosition().y;
 

@@ -23,6 +23,7 @@ private:
 	void moveX(int point);
 	void moveY(int point);
 	void followTarget();
+	int idx = 0;
 	MapGame *map;
 	wxTimer *timer;
 	vector<Tower*> tauntTower;
@@ -38,7 +39,7 @@ public:
 	~Monster();
 	bool attack();
 	void jalan();
-	int draw(wxBufferedPaintDC &pdc);
+	int draw(wxBufferedPaintDC &pdc, vector<wxBitmap*> *anitmation);
 	bool mati();
 	int getX();
 	int getY();

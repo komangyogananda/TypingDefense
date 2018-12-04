@@ -55,8 +55,8 @@ Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, i
 	this->maxHealthPoint = maxHealthPoint;
 	this->healthPoint = maxHealthPoint;
 	this->attackPoint = attackPoint;
-	this->x = x;
-	this->y = y;
+	this->x = x + 35;
+	this->y = y + 35;
 	this->level = level;
 	this->targetX = targetX;
 	this->targetY = targetY;
@@ -73,16 +73,20 @@ void Monster::jalan()
 	moveY(vy);
 }
 
-int Monster::draw(wxBufferedPaintDC &pdc) {
+int Monster::draw(wxBufferedPaintDC &pdc, vector<wxBitmap*> *animation) {
 	if (mati()) return 0;
 	if (attack()) return attackPoint;
-	pdc.SetBrush(wxBrush(wxColour(255,255,255)));
-	pdc.DrawCircle(wxPoint(x, y), r);
+
+	/*pdc.SetBrush(wxBrush(wxColour(255,255,255)));
+	pdc.DrawCircle(wxPoint(x, y), r);*/
+	idx = idx % 12;
+	pdc.DrawBitmap(*(*animation)[idx++], wxPoint(x - 35, y - 35), false);
 	pdc.SetBrush(wxBrush(wxTransparentColour, wxBRUSHSTYLE_TRANSPARENT));
 	pdc.SetPen(wxPen(wxColour(*wxWHITE)));
-	pdc.DrawRectangle(x - 20, y + 20, 2*r, 5);
+	//pdc.DrawRectangle(x - 35, y - 35, 70, 70);
+	pdc.DrawRectangle(x - 35, y + 35, 70, 5);
 	pdc.SetBrush(wxBrush(wxColour(255*(maxHealthPoint - healthPoint)/maxHealthPoint, 255*healthPoint/maxHealthPoint, 0), wxBRUSHSTYLE_SOLID));
-	pdc.DrawRectangle(x - 20, y + 20, healthPoint*2*r/maxHealthPoint, 5);
+	pdc.DrawRectangle(x-35, y + 35, healthPoint*70/maxHealthPoint, 5);
 	return -1;
 }
 

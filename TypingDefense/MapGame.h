@@ -40,7 +40,7 @@ private:
 	wxImage loadLogo(wxString path);
 	vector<koordinatBox> skillButton;
 	vector<Monster*> allMonster;
-	vector<wxBitmap*> skill;
+	vector<wxBitmap*> skill, animationMonster;
 	vector<Bullet*> allBullet;
 	wxTimer *timer;
 	wxTimer *questTimer;
