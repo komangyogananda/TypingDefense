@@ -10,6 +10,7 @@ private:
 
 public:
 	TauntTower(int x, int y, vector<Monster*> &allMonster);
+	TauntTower(int x, int y);
 	~TauntTower();
 	void skill(wxTimerEvent &event);
 };

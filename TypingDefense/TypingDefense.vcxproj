@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BasicButton.cpp" />
     <ClCompile Include="BasicTower.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Frame.cpp" />
@@ -134,25 +135,34 @@
     <ClCompile Include="MapGame.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="SlowButton.cpp" />
     <ClCompile Include="SlowTower.cpp" />
+    <ClCompile Include="StunButton.cpp" />
     <ClCompile Include="StunTower.cpp" />
+    <ClCompile Include="TauntButton.cpp" />
     <ClCompile Include="TauntTower.cpp" />
     <ClCompile Include="Tower.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserButton.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicButton.h" />
     <ClInclude Include="BasicTower.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="MapGame.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Quest.h" />
+    <ClInclude Include="SlowButton.h" />
     <ClInclude Include="SlowTower.h" />
+    <ClInclude Include="StunButton.h" />
     <ClInclude Include="StunTower.h" />
+    <ClInclude Include="TauntButton.h" />
     <ClInclude Include="TauntTower.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="UserButton.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

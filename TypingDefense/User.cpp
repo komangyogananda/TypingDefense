@@ -10,6 +10,16 @@ User::User(string nama)
 	this->score = 0;
 }
 
+int User::getMoney()
+{
+	return money;
+}
+
+void User::setMoney(int money)
+{
+	this->money = money;
+}
+
 User::~User()
 {
 }

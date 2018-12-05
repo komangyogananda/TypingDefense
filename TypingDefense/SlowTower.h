@@ -10,6 +10,7 @@ private:
 
 public:
 	SlowTower(int x, int y, vector<Monster*> &allMonster);
+	SlowTower(int x, int y);
 	~SlowTower();
 	void skill(wxTimerEvent &event);
 };

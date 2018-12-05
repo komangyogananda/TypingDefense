@@ -49,3 +49,8 @@ void Bullet::giveDamage()
 Bullet::~Bullet()
 {
 }
+
+Monster * Bullet::getTargetMonster()
+{
+	return targetMonster;
+}

@@ -11,6 +11,8 @@ private:
 	friend class MapGame;
 public:
 	User(string nama);
+	int getMoney();
+	void setMoney(int money);
 	~User();
 };
 

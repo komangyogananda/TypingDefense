@@ -10,6 +10,7 @@ private:
 
 public:
 	StunTower(int x, int y, vector<Monster*> &allMonster);
+	StunTower(int x, int y);
 	~StunTower();
 	void skill(wxTimerEvent &event);
 };

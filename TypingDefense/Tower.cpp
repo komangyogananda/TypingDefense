@@ -53,3 +53,13 @@ void Tower::setY(int y)
 {
 	this->y = y;
 }
+
+int Tower::getX()
+{
+	return x;
+}
+
+int Tower::getY()
+{
+	return y;
+}

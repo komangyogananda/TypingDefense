@@ -22,7 +22,6 @@ END_EVENT_TABLE()
 
 MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 {
-
 	srand(time(0));
 
 	this->SetFocus();
@@ -67,6 +66,13 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	/*image = loadLogo(wxT("\\coin.png"));
 	image.Rescale(100, image.GetHeight() * 100 / image.GetWidth());
 	coin = new wxBitmap(image);*/
+
+	this->activeButton = nullptr;
+	this->basicButton = new BasicButton(this, &allTower, &allMonster, &allBullet);
+	this->slowButton = new SlowButton(this, &allTower, &allMonster, &allBullet);
+	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet);
+	this->tauntButton = new TauntButton(this, &allTower, &allMonster, &allBullet);
+
 	
 	image = loadLogo(wxT("\\clock.png"));
 	image.Rescale(25, 25);
@@ -226,6 +232,11 @@ MapGame::~MapGame()
 	delete user;
 	delete questClock;
 	delete spawnTimer;
+	delete activeButton;
+	delete basicButton;
+	delete slowButton;
+	delete stunButton;
+	delete tauntButton;
 }
 
 wxImage MapGame::loadLogo(wxString path) {
@@ -269,13 +280,18 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			it = allBullet.erase(it);
 			if (it == allBullet.end()) break;
 		}
+		else if ((*it)->getTargetMonster() == nullptr) {
+			delete *it;
+			it = allBullet.erase(it);
+			if (it == allBullet.end()) break;
+		}
 	}
 
 	for (auto it = allMonster.begin(); it != allMonster.end(); it++) {
 		int kondisi = (*it)->draw(pdc, &animationMonster);
 		if (kondisi != -1) {
 			if (kondisi != 0) {
-				user->lifePoint -= (*it)->attackPoint;
+				minusHealth += (*it)->attackPoint;
 				if (user->lifePoint <= 0) {
 					user->lifePoint = 0;
 					//changeWindow();
@@ -405,96 +421,38 @@ void MapGame::OnClick(wxMouseEvent & event)
 			if (now.y1 <= y && y <= now.y2) {
 				yes = true;
 				status = "Skill" + to_string(i + 1);
-				if (i == 3) {
-					addBasicStatus = true;
-					drawPlaceholder = true;
-					status = "Click to place your basic tower";
-					return;
+				if (user->money >= 100) {
+					if (i == 3) {
+						status = "Click to place your basic tower";
+						activeButton = basicButton;
+						return;
+					}
+					else if (i == 4) {
+						status = "Click to place your slow tower";
+						activeButton = slowButton;
+						return;
+					}
+					else if (i == 5) {
+						status = "Click to place your taunt tower";
+						activeButton = tauntButton;
+						return;
+					}
+					else if (i == 6) {
+						status = "Click to place your status tower";
+						activeButton = stunButton;
+						return;
+					}
 				}
-				else if (i == 4) {
-					addSlowStatus = true;
-					drawPlaceholder = true;
-					status = "Click to place your slow tower";
-					return;
-				}
-				else if (i == 5) {
-					addTauntStatus = true;
-					drawPlaceholder = true;
-					status = "Click to place your taunt tower";
-					return;
-				}
-				else if (i == 6) {
-					addStunStatus = true;
-					drawPlaceholder = true;
-					status = "Click to place your status tower";
-					return;
+				else {
+					status = "Not Enough Money";
 				}
 			}
 		}
 	}
 
-	if (addBasicStatus && user->money >= 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		tower = new BasicTower(x, y, allMonster, allBullet);
-		allTower.push_back(tower);
-		user->money -= 80;
-		addBasicStatus = false;
-	}if (addBasicStatus && user->money < 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		status = "not enough money";
-		addBasicStatus = false;
-	}
-
-	if (addSlowStatus && user->money >= 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		tower = new SlowTower(x, y, allMonster);
-		allTower.push_back(tower);
-		user->money -= 80;
-		addSlowStatus = false;
-	}if (addSlowStatus && user->money < 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		status = "not enough money";
-		addSlowStatus = false;
-	}
-
-	if (addTauntStatus && user->money >= 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		tower = new TauntTower(x, y, allMonster);
-		allTower.push_back(tower);
-		user->money -= 80;
-		addTauntStatus = false;
-	}if (addTauntStatus && user->money < 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		status = "not enough money";
-		addTauntStatus = false;
-	}
-
-	if (addStunStatus && user->money >= 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		tower = new StunTower(x, y, allMonster);
-		allTower.push_back(tower);
-		user->money -= 80;
-		addStunStatus = false;
-	}if (addStunStatus && user->money < 100) {
-		drawPlaceholder = false;
-		delete placeholder;
-		placeholder = nullptr;
-		status = "not enough money";
-		addStunStatus = false;
+	if (activeButton != nullptr) {
+		activeButton->execute();
+		activeButton = nullptr;
 	}
 
 }
@@ -565,9 +523,24 @@ void MapGame::SpawnMonster(wxTimerEvent & event)
 	spawnTimer->Start(1000*randNum(8, 10));
 }
 
+void MapGame::animationMinusHealthBar()
+{
+	if (minusHealth > 0) {
+		minusHealth -= 1;
+		user->lifePoint -= 1;
+		if (user->lifePoint <= 0) user->lifePoint = 0;
+	}
+}
+
+User * MapGame::getUser()
+{
+	return user;
+}
+
 void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {
 
 	wxFont fontNama(16, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	animationMinusHealthBar();
 	pdc.SetFont(fontNama);
 	pdc.DrawText(to_string(user->money), wxPoint(coinSize.GetWidth(), coinSize.GetHeight() + 20));
 	pdc.SetBrush(wxBrush(wxColour(0, 0, 0), wxBRUSHSTYLE_TRANSPARENT));
@@ -584,55 +557,7 @@ void MapGame::drawHealthBar(wxBufferedPaintDC &pdc) {
 void MapGame::drawPlaceholderTower(wxBufferedPaintDC & pdc)
 {
 	wxMouseState mouse = wxGetMouseState();
-	if (!mouse.LeftIsDown()) {
-
-		int x = wxGetMousePosition().x;
-		int y = wxGetMousePosition().y;
-
-		if (placeholder != nullptr) {
-			placeholder->setX(x);
-			placeholder->setY(y);
-		}
-		else {
-			if (addBasicStatus && user->money >= 100) {
-				placeholder = new BasicTower(x, y, allMonster, allBullet);
-				drawPlaceholder = true;
-			}
-			else if (addBasicStatus) {
-				status = "not enough money";
-				addBasicStatus = false;
-			}
-
-			if (addSlowStatus && user->money >= 100) {
-				placeholder = new SlowTower(x, y, allMonster);
-				drawPlaceholder = true;
-			}
-			else if (addSlowStatus) {
-				status = "not enough money";
-				addBasicStatus = false;
-			}
-
-			if (addTauntStatus && user->money >= 100) {
-				placeholder = new TauntTower(x, y, allMonster);
-				drawPlaceholder = true;
-			}
-			else if (addTauntStatus) {
-				status = "not enough money";
-				addBasicStatus = false;
-			}
-
-			if (addStunStatus && user->money >= 100) {
-				placeholder = new StunTower(x, y, allMonster);
-				drawPlaceholder = true;
-			}
-			else if (addStunStatus) {
-				status = "not enough money";
-				addBasicStatus = false;
-			}
-		}
-
-		if (drawPlaceholder && placeholder != nullptr) {
-			placeholder->drawPlaceholder(pdc);
-		}
+	if (activeButton != nullptr) {
+		activeButton->drawPlaceholder(pdc, mouse);
 	}
 }

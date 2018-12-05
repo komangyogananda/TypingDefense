@@ -17,5 +17,6 @@ public:
 	void draw(wxBufferedPaintDC &pdc);
 	void giveDamage();
 	~Bullet();
+	Monster* getTargetMonster();
 };
 

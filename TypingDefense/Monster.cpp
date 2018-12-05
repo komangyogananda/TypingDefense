@@ -37,16 +37,15 @@ void Monster::followTarget()
 
 void Monster::OnTimer(wxTimerEvent & event)
 {
-	static int taunt = 0;
-	static int stun = 0;
-	if (tauntStatus && ++taunt % 3 == 0) {
+	if (tauntStatus) {
 		setTarget(-1, -1);
 		tauntStatus = false;
 	}
-	if (stunStatus && ++stun % 3 == 0) {
+	if (stunStatus) {
 		setSlow(0);
 		stunStatus = false;
 	}
+	timer->Stop();
 }
 
 Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int targetX, int targetY, int level)
@@ -62,7 +61,6 @@ Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, i
 	this->targetY = targetY;
 	this->slow = 0;
 	timer = new wxTimer(this, -1);
-	timer->Start(1000);
 }
 
 void Monster::jalan()
@@ -140,12 +138,14 @@ void Monster::tauntedBy(Tower* taunt)
 {
 	tauntStatus = true;
 	tauntTower.push_back(taunt);
+	timer->Start(2000);
 }
 
 void Monster::stunnedBy(Tower * stun)
 {
 	stunStatus = true;
 	stunTower.push_back(stun);
+	timer->Start(3000);
 }
 
 bool Monster::checkTaunt(Tower * taunt)

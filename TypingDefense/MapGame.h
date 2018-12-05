@@ -13,6 +13,11 @@
 #include "SlowTower.h"
 #include "TauntTower.h"
 #include "StunTower.h"
+#include "UserButton.h"
+#include "BasicButton.h"
+#include "SlowButton.h"
+#include "StunButton.h"
+#include "TauntButton.h"
 
 using namespace std;
 
@@ -25,16 +30,12 @@ class MapGame : public wxWindow
 private:
 	DECLARE_EVENT_TABLE()
 	int w, h, coinIdx = 0;
+	int minusHealth = 0;
 	wxFrame* parent;
 	wxBitmap* background, *questClock, *questImage1, *questImage2, *questImage3;
 	wxSize coinSize;
 	wxImage image;
 	Tower *tower, *placeholder;
-	bool drawPlaceholder = false;
-	bool addBasicStatus = false;
-	bool addSlowStatus = false;
-	bool addStunStatus = false;
-	bool addTauntStatus = false;
 	wxButton *backToMainMenu;
 	wxStatusBar *mapStatusBar;
 	wxImage loadLogo(wxString path);
@@ -56,6 +57,11 @@ private:
 	vector<Tower*> allTower;
 	void changeWindow();
 	int randNum(int low, int high);
+	UserButton *activeButton;
+	BasicButton *basicButton;
+	SlowButton *slowButton;
+	StunButton *stunButton;
+	TauntButton *tauntButton;
 
 public:
 	MapGame(wxFrame *parent);
@@ -68,5 +74,7 @@ public:
 	void OnChar(wxKeyEvent &event);
 	void QuestGiver(wxTimerEvent &event);
 	void SpawnMonster(wxTimerEvent &event);
+	void animationMinusHealthBar();
+	User* getUser();
 };
 

@@ -27,6 +27,8 @@ public:
 	void drawPlaceholder(wxBufferedPaintDC &pdc);
 	void setX(int x);
 	void setY(int y);
+	int getX();
+	int getY();
 	virtual void skill(wxTimerEvent &event) = 0;
 };
 

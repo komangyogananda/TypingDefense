@@ -13,6 +13,7 @@ private:
 
 public:
 	BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet);
+	BasicTower(int x, int y);
 	~BasicTower();
 	void skill(wxTimerEvent &event);
 };
