@@ -64,9 +64,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image.Rescale(w, h, wxIMAGE_QUALITY_NORMAL);
 	background = new wxBitmap(image);
 
-	image = loadLogo(wxT("\\coin.png"));
+	/*image = loadLogo(wxT("\\coin.png"));
 	image.Rescale(100, image.GetHeight() * 100 / image.GetWidth());
-	coin = new wxBitmap(image);
+	coin = new wxBitmap(image);*/
 	
 	image = loadLogo(wxT("\\clock.png"));
 	image.Rescale(25, 25);
@@ -89,6 +89,12 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 		image = loadLogo(wxT("\\monster\\monster" + to_string(i) + ".png"));
 		image.Rescale(70, 70);
 		animationMonster.push_back(new wxBitmap(image));
+	}
+
+	for (int i = 0; i < 10; i++) {
+		image = loadLogo(wxT("\\coin\\coin" + to_string(i) + ".png"));
+		image.Rescale(image.GetWidth() / 8, image.GetHeight() / 8);
+		coin.push_back(new wxBitmap(image));
 	}
 
 	image = loadLogo(wxT("\\snow.png"));
@@ -204,6 +210,10 @@ MapGame::~MapGame()
 	for (auto it : animationMonster) {
 		delete it;
 	}
+
+	for (auto it : coin) {
+		delete it;
+	}
 	delete questImage1;
 	delete questImage2;
 	delete questImage3;
@@ -214,7 +224,6 @@ MapGame::~MapGame()
 	delete questTimer;
 	delete quest;
 	delete user;
-	delete coin;
 	delete questClock;
 	delete spawnTimer;
 }
@@ -233,8 +242,12 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	wxBufferedPaintDC pdc(this);
 	
 	pdc.DrawBitmap(*background, wxPoint(0, 0), true);
-	pdc.DrawBitmap(*coin, wxPoint(9 * wxGetDisplaySize().GetWidth() / 10, 2));
-	coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin->GetWidth() + 10, 2);
+	coinIdx = coinIdx % 30;
+	pdc.DrawBitmap(*coin[coinIdx / 3], wxPoint(9 * wxGetDisplaySize().GetWidth() / 10, 10));
+	coinIdx++;
+	coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin[0]->GetWidth() + 10, 10);
+	//pdc.DrawBitmap(*coin, wxPoint(9 * wxGetDisplaySize().GetWidth() / 10, 2));
+	//coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin->GetWidth() + 10, 2);
 
 	drawHealthBar(pdc);
 	drawPlaceholderTower(pdc);

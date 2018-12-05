@@ -24,9 +24,9 @@ class MapGame : public wxWindow
 {
 private:
 	DECLARE_EVENT_TABLE()
-	int w, h;
+	int w, h, coinIdx = 0;
 	wxFrame* parent;
-	wxBitmap* background, *coin, *questClock, *questImage1, *questImage2, *questImage3;
+	wxBitmap* background, *questClock, *questImage1, *questImage2, *questImage3;
 	wxSize coinSize;
 	wxImage image;
 	Tower *tower, *placeholder;
@@ -40,7 +40,7 @@ private:
 	wxImage loadLogo(wxString path);
 	vector<koordinatBox> skillButton;
 	vector<Monster*> allMonster;
-	vector<wxBitmap*> skill, animationMonster;
+	vector<wxBitmap*> skill, animationMonster, coin;
 	vector<Bullet*> allBullet;
 	wxTimer *timer;
 	wxTimer *questTimer;
