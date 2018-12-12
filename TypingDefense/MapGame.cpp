@@ -15,6 +15,7 @@ BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_TIMER(2000, MapGame::OnTimer)
 	EVT_TIMER(2001, MapGame::QuestGiver)
 	EVT_TIMER(2002, MapGame::SpawnMonster)
+	EVT_TIMER(2003, MapGame::NoCoin)
 	EVT_BUTTON(1001, MapGame::OnButtonClick)
 	EVT_LEFT_DOWN(MapGame::OnClick)
 	EVT_PAINT(MapGame::OnPaint)
@@ -38,6 +39,8 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 
 	timer = new wxTimer(this, 2000);
 	timer->Start(10);
+
+	nocointimer = new wxTimer(this, 2003);
 
 	spawnTimer = new wxTimer(this, 2002);
 	spawnTimer->Start(8000);
@@ -78,6 +81,8 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image.Rescale(25, 25);
 	questClock = new wxBitmap(image);
 
+	image = loadLogo(wxT("\\nocoin.png"));
+	nocoin = new wxBitmap(image);
 
 	image = loadLogo(wxT("\\questImage1.png"));
 	image.Rescale(100, 100);
@@ -220,6 +225,8 @@ MapGame::~MapGame()
 	for (auto it : coin) {
 		delete it;
 	}
+	delete nocoin;
+	delete nocointimer;
 	delete questImage1;
 	delete questImage2;
 	delete questImage3;
@@ -251,7 +258,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	mapStatusBar->SetStatusText(status);
 	mapStatusBar->Show(true);
 	wxBufferedPaintDC pdc(this);
-	
+
 	pdc.DrawBitmap(*background, wxPoint(0, 0), true);
 	coinIdx = coinIdx % 30;
 	pdc.DrawBitmap(*coin[coinIdx / 3], wxPoint(9 * wxGetDisplaySize().GetWidth() / 10, 10));
@@ -259,6 +266,10 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin[0]->GetWidth() + 10, 10);
 	//pdc.DrawBitmap(*coin, wxPoint(9 * wxGetDisplaySize().GetWidth() / 10, 2));
 	//coinSize = wxSize(9 * wxGetDisplaySize().GetWidth() / 10 + coin->GetWidth() + 10, 2);
+
+	if (nocoinstatus) {
+		pdc.DrawBitmap(*nocoin, wxPoint(9 * wxGetDisplaySize().GetWidth() / 10 - nocoin->GetSize().GetWidth() - 10, 10));
+	}
 
 	drawHealthBar(pdc);
 	drawPlaceholderTower(pdc);
@@ -416,35 +427,30 @@ void MapGame::OnClick(wxMouseEvent & event)
 
 	for (int i = 0; i < skillButton.size(); i++) {
 		koordinatBox now = skillButton[i];
-		wxMessageOutputDebug().Printf("x1 = %d y1 = %d x2 = %d y2 = %d", now.x1, now.y1, now.x2, now.y2);
 		if (now.x1 <= x && x <= now.x2) {
 			if (now.y1 <= y && y <= now.y2) {
 				yes = true;
-				status = "Skill" + to_string(i + 1);
 				if (user->money >= 100) {
 					if (i == 3) {
-						status = "Click to place your basic tower";
 						activeButton = basicButton;
 						return;
 					}
 					else if (i == 4) {
-						status = "Click to place your slow tower";
 						activeButton = slowButton;
 						return;
 					}
 					else if (i == 5) {
-						status = "Click to place your taunt tower";
 						activeButton = tauntButton;
 						return;
 					}
 					else if (i == 6) {
-						status = "Click to place your status tower";
 						activeButton = stunButton;
 						return;
 					}
 				}
 				else {
-					status = "Not Enough Money";
+					nocoinstatus = true;
+					nocointimer->Start(2000);
 				}
 			}
 		}
@@ -500,6 +506,12 @@ void MapGame::QuestGiver(wxTimerEvent & event)
 	this->quest->setStatus(0);
 	this->questInterval = ((double)(this->quest->getTarget()).size()) / 5 * 1000;
 	questTimer->Stop();
+}
+
+void MapGame::NoCoin(wxTimerEvent & event)
+{
+	nocoinstatus = false;
+	nocointimer->Stop();
 }
 
 void MapGame::SpawnMonster(wxTimerEvent & event)

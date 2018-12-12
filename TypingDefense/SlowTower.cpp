@@ -21,7 +21,7 @@ void SlowTower::skill(wxTimerEvent &event)
 	}
 }
 
-SlowTower::SlowTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
+SlowTower::SlowTower(double x, double y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(10);
@@ -30,7 +30,7 @@ SlowTower::SlowTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &
 	this->b = 255;
 }
 
-SlowTower::SlowTower(int x, int y) : Tower(x, y, nullptr)
+SlowTower::SlowTower(double x, double y) : Tower(x, y, nullptr)
 {
 	this->timer = new wxTimer(this, -1);
 	this->r = 0;

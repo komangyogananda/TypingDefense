@@ -12,8 +12,8 @@ private:
 	Monster *focusedMonster = nullptr;
 
 public:
-	BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet);
-	BasicTower(int x, int y);
+	BasicTower(double x, double y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet);
+	BasicTower(double x, double y);
 	~BasicTower();
 	void skill(wxTimerEvent &event);
 };

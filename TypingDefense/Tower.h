@@ -14,19 +14,19 @@ protected:
 	int attackPoint, radius, level;
 	int drawRadius;
 	int plus = 2;
-	int x, y, s;
+	double x, y, s;
 	int r, g, b;
 	vector<Monster*> *allMonster;
 	double jarak(Monster* monsterNear);
 	bool active;
 
 public:
-	Tower(int x, int y, vector<Monster*> *allMonster);
+	Tower(double x, double y, vector<Monster*> *allMonster);
 	~Tower();
 	void draw(wxBufferedPaintDC &pdc);
 	void drawPlaceholder(wxBufferedPaintDC &pdc);
-	void setX(int x);
-	void setY(int y);
+	void setX(double x);
+	void setY(double y);
 	int getX();
 	int getY();
 	virtual void skill(wxTimerEvent &event) = 0;

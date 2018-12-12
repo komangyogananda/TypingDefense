@@ -9,8 +9,8 @@ private:
 	wxTimer *timer;
 
 public:
-	SlowTower(int x, int y, vector<Monster*> &allMonster);
-	SlowTower(int x, int y);
+	SlowTower(double x, double y, vector<Monster*> &allMonster);
+	SlowTower(double x, double y);
 	~SlowTower();
 	void skill(wxTimerEvent &event);
 };

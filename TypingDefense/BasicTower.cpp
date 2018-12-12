@@ -27,7 +27,7 @@ void BasicTower::skill(wxTimerEvent &event)
 	}
 }
 
-BasicTower::BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet) : Tower(x, y, &allMonster)
+BasicTower::BasicTower(double x, double y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
@@ -37,7 +37,7 @@ BasicTower::BasicTower(int x, int y, vector<Monster*> &allMonster, vector<Bullet
 	this->b = 0;
 }
 
-BasicTower::BasicTower(int x, int y) : Tower(x, y, nullptr)
+BasicTower::BasicTower(double x, double y) : Tower(x, y, nullptr)
 {
 	this->timer = new wxTimer(this, -1);
 	this->allBullet = nullptr;

@@ -3,20 +3,22 @@
 #include "Tower.h"
 
 BEGIN_EVENT_TABLE(Monster, wxEvtHandler)
-	EVT_TIMER(-1, Monster::OnTimer)
+	EVT_TIMER(2000, Monster::OnTimer)
+	EVT_TIMER(2001, Monster::AnimationTimer)
 END_EVENT_TABLE()
 
 Monster::~Monster()
 {
+	delete animationTimer;
 	delete timer;
 }
 
-void Monster::moveX(int point)
+void Monster::moveX(double point)
 {
 	this->x += point;
 }
 
-void Monster::moveY(int point)
+void Monster::moveY(double point)
 {
 	this->y += point;
 }
@@ -48,6 +50,13 @@ void Monster::OnTimer(wxTimerEvent & event)
 	timer->Stop();
 }
 
+void Monster::AnimationTimer(wxTimerEvent & event)
+{
+	if (!stunStatus){
+		idx++;
+	}
+}
+
 Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, int y, int targetX, int targetY, int level)
 {
 	map = mapGame;
@@ -60,7 +69,9 @@ Monster::Monster(MapGame *mapGame, int maxHealthPoint, int attackPoint, int x, i
 	this->targetX = targetX;
 	this->targetY = targetY;
 	this->slow = 0;
-	timer = new wxTimer(this, -1);
+	timer = new wxTimer(this, 2000);
+	animationTimer = new wxTimer(this, 2001);
+	animationTimer->Start(20);
 }
 
 void Monster::jalan()
@@ -75,16 +86,30 @@ int Monster::draw(wxBufferedPaintDC &pdc, vector<wxBitmap*> *animation) {
 	if (mati()) return 0;
 	if (attack()) return attackPoint;
 
-	/*pdc.SetBrush(wxBrush(wxColour(255,255,255)));
-	pdc.DrawCircle(wxPoint(x, y), r);*/
+	///*pdc.SetBrush(wxBrush(wxColour(255,255,255)));
+	//pdc.DrawCircle(wxPoint(x, y), r);*/
+	//idx = idx % 12;
+	//pdc.DrawBitmap(*(*animation)[idx++], wxPoint(x - 35, y - 35), false);
+	//pdc.SetBrush(wxBrush(wxTransparentColour, wxBRUSHSTYLE_TRANSPARENT));
+	//pdc.SetPen(wxPen(wxColour(*wxWHITE)));
+	////pdc.DrawRectangle(x - 35, y - 35, 70, 70);
+	//pdc.DrawRectangle(x - 35, y + 35, 70, 5);
+	//pdc.SetBrush(wxBrush(wxColour(255*(maxHealthPoint - healthPoint)/maxHealthPoint, 255*healthPoint/maxHealthPoint, 0), wxBRUSHSTYLE_SOLID));
+	//pdc.DrawRectangle(x-35, y + 35, healthPoint*70/maxHealthPoint, 5);
+
+	wxGraphicsContext *gc = wxGraphicsContext::Create(pdc);
+
 	idx = idx % 12;
-	pdc.DrawBitmap(*(*animation)[idx++], wxPoint(x - 35, y - 35), false);
-	pdc.SetBrush(wxBrush(wxTransparentColour, wxBRUSHSTYLE_TRANSPARENT));
-	pdc.SetPen(wxPen(wxColour(*wxWHITE)));
-	//pdc.DrawRectangle(x - 35, y - 35, 70, 70);
-	pdc.DrawRectangle(x - 35, y + 35, 70, 5);
-	pdc.SetBrush(wxBrush(wxColour(255*(maxHealthPoint - healthPoint)/maxHealthPoint, 255*healthPoint/maxHealthPoint, 0), wxBRUSHSTYLE_SOLID));
-	pdc.DrawRectangle(x-35, y + 35, healthPoint*70/maxHealthPoint, 5);
+
+	if (gc) {
+		gc->DrawBitmap(*(*animation)[idx], x - 35, y - 35, 70, 70);
+		gc->SetPen(*wxWHITE_PEN);
+		gc->SetBrush(*wxWHITE_BRUSH);
+		gc->DrawRectangle(x - 35, y + 35, 70, 5);
+		gc->SetBrush(wxBrush(wxColour(255 * (maxHealthPoint - healthPoint) / maxHealthPoint, 255 * healthPoint / maxHealthPoint, 0), wxBRUSHSTYLE_SOLID));
+		gc->DrawRectangle(x - 35, y + 35, healthPoint * 70 / maxHealthPoint, 5);
+		delete gc;
+	}
 	return -1;
 }
 
@@ -96,12 +121,12 @@ bool Monster::mati()
 	return false;
 }
 
-int Monster::getX()
+double Monster::getX()
 {
 	return x;
 }
 
-int Monster::getY()
+double Monster::getY()
 {
 	return y;
 }
@@ -122,7 +147,7 @@ void Monster::setSlow(int slow)
 	this->slow = slow;
 }
 
-void Monster::setTarget(int x, int y)
+void Monster::setTarget(double x, double y)
 {
 	this->targetX = x;
 	this->targetY = y;

@@ -24,7 +24,7 @@ void StunTower::skill(wxTimerEvent &event)
 	}
 }
 
-StunTower::StunTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
+StunTower::StunTower(double x, double y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
@@ -33,7 +33,7 @@ StunTower::StunTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &
 	this->b = 0;
 }
 
-StunTower::StunTower(int x, int y) : Tower(x, y, nullptr)
+StunTower::StunTower(double x, double y) : Tower(x, y, nullptr)
 {
 	this->timer = new wxTimer(this, -1);
 	this->r = 0;

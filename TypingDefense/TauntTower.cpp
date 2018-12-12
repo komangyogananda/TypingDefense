@@ -24,7 +24,7 @@ void TauntTower::skill(wxTimerEvent &event)
 	}
 }
 
-TauntTower::TauntTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
+TauntTower::TauntTower(double x, double y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
@@ -33,7 +33,7 @@ TauntTower::TauntTower(int x, int y, vector<Monster*> &allMonster) : Tower(x, y,
 	this->b = 0;
 }
 
-TauntTower::TauntTower(int x, int y) : Tower(x, y, nullptr)
+TauntTower::TauntTower(double x, double y) : Tower(x, y, nullptr)
 {
 	this->timer = new wxTimer(this, -1);
 	this->r = 0;

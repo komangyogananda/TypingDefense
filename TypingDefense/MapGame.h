@@ -33,6 +33,7 @@ private:
 	int minusHealth = 0;
 	wxFrame* parent;
 	wxBitmap* background, *questClock, *questImage1, *questImage2, *questImage3;
+	wxBitmap* nocoin;
 	wxSize coinSize;
 	wxImage image;
 	Tower *tower, *placeholder;
@@ -62,6 +63,8 @@ private:
 	SlowButton *slowButton;
 	StunButton *stunButton;
 	TauntButton *tauntButton;
+	bool nocoinstatus = false;
+	wxTimer *nocointimer;
 
 public:
 	MapGame(wxFrame *parent);
@@ -73,6 +76,7 @@ public:
 	void OnKeyDown(wxKeyEvent &event);
 	void OnChar(wxKeyEvent &event);
 	void QuestGiver(wxTimerEvent &event);
+	void NoCoin(wxTimerEvent &event);
 	void SpawnMonster(wxTimerEvent &event);
 	void animationMinusHealthBar();
 	User* getUser();

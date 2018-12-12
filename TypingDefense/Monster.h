@@ -2,6 +2,8 @@
 #include <wx/dcbuffer.h>
 #include <wx/wx.h>
 #include <vector>
+#include <list>
+#include "wx/graphics.h"
 
 using namespace std;
 
@@ -15,20 +17,22 @@ private:
 	int maxHealthPoint;
 	int attackPoint;
 	int level;
-	int x, y;
-	int targetX, targetY;
-	int vx, vy, v = 2;
+	double x, y;
+	double targetX, targetY;
+	double vx, vy, v = 1.5;
 	int slow;
 	int r = 20;
-	void moveX(int point);
-	void moveY(int point);
+	void moveX(double point);
+	void moveY(double point);
 	void followTarget();
 	int idx = 0;
 	MapGame *map;
 	wxTimer *timer;
+	wxTimer *animationTimer;
 	vector<Tower*> tauntTower;
 	vector<Tower*> stunTower;
 	void OnTimer(wxTimerEvent &event);
+	void AnimationTimer(wxTimerEvent &event);
 	bool tauntStatus = false;
 	bool stunStatus = false;
 	DECLARE_EVENT_TABLE()
@@ -41,13 +45,13 @@ public:
 	void jalan();
 	int draw(wxBufferedPaintDC &pdc, vector<wxBitmap*> *anitmation);
 	bool mati();
-	int getX();
-	int getY();
+	double getX();
+	double getY();
 	int getRadius();
-	int getSpeed;
+	double getSpeed;
 	void getDamage(int damage);
 	void setSlow(int slow);
-	void setTarget(int x, int y);
+	void setTarget(double x, double y);
 	void tauntedBy(Tower* taunt);
 	void stunnedBy(Tower* stun);
 	bool checkTaunt(Tower* taunt);

@@ -1,14 +1,14 @@
 #include "Bullet.h"
 
 
-Bullet::Bullet(Monster *targetMonster, int x, int y, int damageGiven)
+Bullet::Bullet(Monster *targetMonster, double x, double y, int damageGiven)
 {
 	this->x = x;
 	this->y = y;
 	this->targetMonster = targetMonster;
 	r = 2;
 	this->damageGiven = damageGiven;
-	this->v = 5;
+	this->v = 3.0;
 	this->vx = 0;
 	this->vy = 0;
 }
@@ -37,8 +37,22 @@ void Bullet::draw(wxBufferedPaintDC &pdc)
 {
 	x += vx;
 	y += vy;
-	pdc.SetBrush(wxBrush(wxColour(*wxBLACK)));
-	pdc.DrawCircle(x, y, r);
+	/*pdc.SetBrush(wxBrush(wxColour(*wxBLACK)));
+	pdc.DrawCircle(x, y, r);*/
+
+	wxGraphicsContext *gc = wxGraphicsContext::Create(pdc);
+	if (gc)
+	{
+		// make a path that contains a circle and some lines
+		gc->SetPen(*wxBLACK_PEN);
+		gc->SetBrush(*wxBLACK_BRUSH);
+		wxGraphicsPath path = gc->CreatePath();
+		path.AddCircle(x, y, r);
+		gc->FillPath(path);
+		gc->StrokePath(path);
+		delete gc;
+	}
+
 }
 
 void Bullet::giveDamage()

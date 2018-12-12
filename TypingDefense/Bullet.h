@@ -1,17 +1,19 @@
 #pragma once
 #include "Monster.h"
 #include "wx/dcbuffer.h"
+#include "wx/graphics.h"
 #include <math.h>
 
 class Bullet
 {
 private:
-	int x, y, r = 2;
-	int v, vx, vy;
+	double x, y;
+	int r = 4;
+	double v, vx, vy;
 	int damageGiven;
 	Monster *targetMonster;
 public:
-	Bullet(Monster *targetMonster, int x, int y, int damageGiven);
+	Bullet(Monster *targetMonster, double x, double y, int damageGiven);
 	void followTarget();
 	bool checkCollision();
 	void draw(wxBufferedPaintDC &pdc);
