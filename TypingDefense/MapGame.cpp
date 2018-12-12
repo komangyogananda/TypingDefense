@@ -43,7 +43,6 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	nocointimer = new wxTimer(this, 2003);
 
 	spawnTimer = new wxTimer(this, 2002);
-	spawnTimer->Start(8000);
 
 	questTimer = new wxTimer(this, 2001);
 	questTimer->Start(3000);
@@ -54,8 +53,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	mapStatusBar = new wxStatusBar(this->parent, -1);
 	status = "default";
 	this->parent->SetStatusBar(mapStatusBar);
-	Monster *test = new Monster(this, 100, 35, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
-	allMonster.push_back(test);
+	
+	/*Monster *test = new Monster(this, 100, 35, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
+	allMonster.push_back(test);*/
 
 	tower = new StunTower(1300, 450, allMonster);
 	allTower.push_back(tower);
@@ -187,6 +187,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	next += 10 + image.GetWidth();
 
 	this->placeholder = nullptr;
+
+	level = new Level(1);
+	spawnTimer->Start(1000 * level->getTimePerMonster());
 }
 
 void MapGame::changeWindow()
@@ -244,6 +247,7 @@ MapGame::~MapGame()
 	delete slowButton;
 	delete stunButton;
 	delete tauntButton;
+	delete level;
 }
 
 wxImage MapGame::loadLogo(wxString path) {
@@ -516,23 +520,51 @@ void MapGame::NoCoin(wxTimerEvent & event)
 
 void MapGame::SpawnMonster(wxTimerEvent & event)
 {
+	wxMessageOutputDebug().Printf("%.2lf", level->getTimePerMonster());
 	Monster *spawn;
-	int location = randNum(1, 3);
-	int targetY = randNum(0.25*h, 0.68*h);
-	if (location == 1) {
-		int y = randNum(0.32*h, 0.5*h);
-		spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
+	if (level->getLaunchedMonster() == level->getTotalMonster()) {
+		this->LevelUp();
+		spawnTimer->Start(15000);
+		return;
 	}
-	else if (location == 2) {
-		int x = randNum(0.5*w, 0.62*w);
-		spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
+	if (level->getLaunchedMonster() >= level->getTotalMonster() / 2) {
+		int location = randNum(1, 3);
+		int targetY = randNum(0.25*h, 0.68*h);
+		if (location == 1) {
+			int y = randNum(0.32*h, 0.5*h);
+			spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
+		}
+		else if (location == 2) {
+			int x = randNum(0.5*w, 0.62*w);
+			spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
+		}
+		else if (location == 3) {
+			int x = randNum(0.5*w, 0.62*w);
+			spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
+		}
+		allMonster.push_back(spawn);
+		level->setLaunchedMonster(level->getLaunchedMonster() + 1);
+		spawnTimer->Start(100);
 	}
-	else if (location == 3) {
-		int x = randNum(0.5*w, 0.62*w);
-		spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
+	else {
+		int location = randNum(1, 3);
+		int targetY = randNum(0.25*h, 0.68*h);
+		if (location == 1) {
+			int y = randNum(0.32*h, 0.5*h);
+			spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
+		}
+		else if (location == 2) {
+			int x = randNum(0.5*w, 0.62*w);
+			spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
+		}
+		else if (location == 3) {
+			int x = randNum(0.5*w, 0.62*w);
+			spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
+		}
+		allMonster.push_back(spawn);
+		level->setLaunchedMonster(level->getLaunchedMonster() + 1);
+		spawnTimer->Start(1000 * level->getTimePerMonster());
 	}
-	allMonster.push_back(spawn);
-	spawnTimer->Start(1000*randNum(8, 10));
 }
 
 void MapGame::animationMinusHealthBar()
@@ -542,6 +574,14 @@ void MapGame::animationMinusHealthBar()
 		user->lifePoint -= 1;
 		if (user->lifePoint <= 0) user->lifePoint = 0;
 	}
+}
+
+void MapGame::LevelUp()
+{
+	int currlevel = level->getLevel();
+	delete level;
+	status = to_string(currlevel + 1);
+	level = new Level(currlevel + 1);
 }
 
 User * MapGame::getUser()

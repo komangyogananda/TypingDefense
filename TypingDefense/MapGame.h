@@ -18,6 +18,7 @@
 #include "SlowButton.h"
 #include "StunButton.h"
 #include "TauntButton.h"
+#include "Level.h"
 
 using namespace std;
 
@@ -65,6 +66,7 @@ private:
 	TauntButton *tauntButton;
 	bool nocoinstatus = false;
 	wxTimer *nocointimer;
+	Level *level;
 
 public:
 	MapGame(wxFrame *parent);
@@ -79,6 +81,7 @@ public:
 	void NoCoin(wxTimerEvent &event);
 	void SpawnMonster(wxTimerEvent &event);
 	void animationMinusHealthBar();
+	void LevelUp();
 	User* getUser();
 };
 
