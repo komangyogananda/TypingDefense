@@ -73,6 +73,7 @@ private:
 	bool nocoinstatus = false;
 	wxTimer *nocointimer;
 	Level *level;
+	wxBitmap *questBackground;
 
 public:
 	MapGame(wxFrame *parent);

@@ -78,6 +78,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 	this->tauntButton = new TauntButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 
+	image = loadLogo(wxT("\\quest.png"));
+	image.Rescale(w, h);
+	questBackground = new wxBitmap(image);
 	
 	image = loadLogo(wxT("\\clock.png"));
 	image.Rescale(25, 25);
@@ -384,9 +387,9 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		for (int i = 0; i < 3; i++) stSec.pop_back();
 		
 		pdc.SetPen(*wxWHITE_PEN);
-		pdc.SetBrush(wxColor(RGB(92, 51, 23)));
-		pdc.DrawRoundedRectangle(wxPoint(75, wxGetDisplaySize().GetHeight() - 275), 
-			wxSize(13 * ((this->quest)->getTarget()).size(), 220), 50);
+		pdc.SetBrush(wxColor(RGB(81, 178, 128)));
+		//pdc.DrawRectangle(wxPoint(75, wxGetDisplaySize().GetHeight() - 275), wxSize(13 * ((this->quest)->getTarget()).size()-20, 220));
+		pdc.DrawBitmap(*questBackground, wxPoint(0, 0), true);
 		pdc.DrawBitmap(*questClock, wxPoint(100 , wxGetDisplaySize().GetHeight() - 250));
 		
 		pdc.SetTextForeground(RGB(255, 255, 255));
@@ -462,7 +465,6 @@ void MapGame::OnClick(wxMouseEvent & event)
 				yes = true;
 				if (i == 1) {
 					activeButton = meteorButton;
-					wxMessageOutputDebug().Printf("CUK");
 				}
 				if (user->money >= 100) {
 					if (i == 3) {

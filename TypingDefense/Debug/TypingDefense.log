@@ -1,2 +1,4 @@
-﻿  MeteorButton.cpp
-  TypingDefense.vcxproj -> C:\TypingDefense\Debug\TypingDefense.exe
+﻿  MapGame.cpp
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(300): warning C4018: '<': signed/unsigned mismatch
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(461): warning C4018: '<': signed/unsigned mismatch
+  TypingDefense.vcxproj -> C:\Users\komangyogananda\source\repos\TypingDefense\Debug\TypingDefense.exe
