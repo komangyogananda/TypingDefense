@@ -1,4 +1,2 @@
-﻿  Window.cpp
-c:\users\komangyogananda\source\repos\typingdefense\typingdefense\window.cpp(18): warning C4101: 'h': unreferenced local variable
-c:\users\komangyogananda\source\repos\typingdefense\typingdefense\window.cpp(18): warning C4101: 'w': unreferenced local variable
-  TypingDefense.vcxproj -> C:\Users\komangyogananda\source\repos\TypingDefense\Debug\TypingDefense.exe
+﻿  MeteorButton.cpp
+  TypingDefense.vcxproj -> C:\TypingDefense\Debug\TypingDefense.exe

@@ -40,6 +40,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	timer = new wxTimer(this, 2000);
 	timer->Start(10);
 
+
 	nocointimer = new wxTimer(this, 2003);
 
 	spawnTimer = new wxTimer(this, 2002);
@@ -59,8 +60,6 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 
 	tower = new StunTower(1300, 450, allMonster);
 	allTower.push_back(tower);
-
-
 
 	image = loadLogo(wxT("\\Map.png"));
 	wxSize a = image.GetSize();
@@ -315,8 +314,18 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		}
 	}
 
-	for (auto it : allSkill) {
-		it->active(pdc, &meteorPng);
+	for (auto it = allSkill.begin(); it != allSkill.end(); it++) {
+		
+		if ((*it)->getIdx() >= 8) {
+
+			delete *it;
+			it = allSkill.erase(it);
+			if (it == allSkill.end()) break;
+
+		}
+		else {
+			(*it)->active(pdc, &meteorPng);
+		}
 	}
 
 	for (auto it = allMonster.begin(); it != allMonster.end(); it++) {

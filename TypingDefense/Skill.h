@@ -14,6 +14,8 @@ protected:
 	int cooldown;
 	int centerX, centerY;
 public:
+	virtual int getIdx() = 0;
+	virtual void setIdx(int) = 0;
 	virtual void active(wxBufferedPaintDC&, vector<wxBitmap*> *png) = 0;
 	Skill(int x, int y, vector<Monster*> *allMonster);
 	int getCenterX();

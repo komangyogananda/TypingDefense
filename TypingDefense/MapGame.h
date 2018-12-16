@@ -21,6 +21,7 @@
 #include "TauntButton.h"
 #include "Level.h"
 #include "Skill.h"
+#include "Meteor.h"
 
 using namespace std;
 
