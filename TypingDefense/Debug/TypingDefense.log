@@ -1,2 +1,19 @@
-﻿  Meteor.cpp
+﻿  BasicButton.cpp
+  Frame.cpp
+  Main.cpp
+  MapGame.cpp
+c:\typingdefense\typingdefense\mapgame.cpp(298): warning C4018: '<': signed/unsigned mismatch
+c:\typingdefense\typingdefense\mapgame.cpp(449): warning C4018: '<': signed/unsigned mismatch
+  Meteor.cpp
+  MeteorButton.cpp
+  Monster.cpp
+  Skill.cpp
+  SlowButton.cpp
+  StunButton.cpp
+  TauntButton.cpp
+  UserButton.cpp
+  Window.cpp
+c:\typingdefense\typingdefense\window.cpp(18): warning C4101: 'h': unreferenced local variable
+c:\typingdefense\typingdefense\window.cpp(18): warning C4101: 'w': unreferenced local variable
+  Generating Code...
   TypingDefense.vcxproj -> C:\TypingDefense\Debug\TypingDefense.exe

@@ -316,7 +316,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 
 	for (auto it : allSkill) {
-		it->draw(pdc, &meteorPng);
+		it->active(pdc, &meteorPng);
 	}
 
 	for (auto it = allMonster.begin(); it != allMonster.end(); it++) {

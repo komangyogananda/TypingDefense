@@ -15,7 +15,6 @@ protected:
 	int centerX, centerY;
 public:
 	virtual void active(wxBufferedPaintDC&, vector<wxBitmap*> *png) = 0;
-	virtual void draw(wxBufferedPaintDC&, vector<wxBitmap*> *png) = 0;
 	Skill(int x, int y, vector<Monster*> *allMonster);
 	int getCenterX();
 	int getCenterY();

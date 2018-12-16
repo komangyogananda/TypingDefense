@@ -17,6 +17,5 @@ public:
 	Meteor(int x, int y);
 	~Meteor();
 	void OnDraw(wxTimerEvent& event);
-	
 };
 
