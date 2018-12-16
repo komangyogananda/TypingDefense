@@ -11,7 +11,7 @@ private:
 	Tower* fix;
 
 public:
-	SlowButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet);
+	SlowButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill);
 	~SlowButton();
 	void execute();
 	void drawPlaceholder(wxBufferedPaintDC &pdc, wxMouseState &mouse);

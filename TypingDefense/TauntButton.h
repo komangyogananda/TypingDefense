@@ -11,7 +11,7 @@ private:
 	Tower* fix;
 
 public:
-	TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet);
+	TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill);
 	~TauntButton();
 	void execute();
 	void drawPlaceholder(wxBufferedPaintDC &pdc, wxMouseState &mouse);

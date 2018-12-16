@@ -11,7 +11,7 @@ private:
 	Tower* fix;
 
 public:
-	StunButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet);
+	StunButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill);
 	~StunButton();
 	void execute();
 	void drawPlaceholder(wxBufferedPaintDC &pdc, wxMouseState &mouse);

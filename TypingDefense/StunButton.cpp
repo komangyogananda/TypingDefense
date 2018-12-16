@@ -3,8 +3,8 @@
 #include "StunTower.h"
 #include "MapGame.h"
 
-StunButton::StunButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet)
-	: UserButton(map, allTower, allMonster, allBullet)
+StunButton::StunButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
 	this->tower = new StunTower(1, 1);
 }

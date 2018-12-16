@@ -3,8 +3,8 @@
 #include "TauntTower.h"
 #include "MapGame.h"
 
-TauntButton::TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet)
-	: UserButton(map, allTower, allMonster, allBullet)
+TauntButton::TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
 	this->tower = new TauntTower(1, 1);
 }

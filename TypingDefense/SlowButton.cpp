@@ -3,8 +3,8 @@
 #include "SlowTower.h"
 #include "MapGame.h"
 
-SlowButton::SlowButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet)
-	: UserButton(map, allTower, allMonster, allBullet)
+SlowButton::SlowButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
 	this->tower = new SlowTower(1, 1);
 }

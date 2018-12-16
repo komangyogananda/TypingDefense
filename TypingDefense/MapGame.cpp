@@ -60,6 +60,8 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	tower = new StunTower(1300, 450, allMonster);
 	allTower.push_back(tower);
 
+
+
 	image = loadLogo(wxT("\\Map.png"));
 	wxSize a = image.GetSize();
 	double aspectRatio = (double)a.GetHeight() / a.GetWidth();
@@ -71,10 +73,11 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	coin = new wxBitmap(image);*/
 
 	this->activeButton = nullptr;
-	this->basicButton = new BasicButton(this, &allTower, &allMonster, &allBullet);
-	this->slowButton = new SlowButton(this, &allTower, &allMonster, &allBullet);
-	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet);
-	this->tauntButton = new TauntButton(this, &allTower, &allMonster, &allBullet);
+	this->meteorButton = new MeteorButton(this, &allTower, &allMonster, &allBullet, &allSkill);
+	this->basicButton = new BasicButton(this, &allTower, &allMonster, &allBullet, &allSkill);
+	this->slowButton = new SlowButton(this, &allTower, &allMonster, &allBullet, &allSkill);
+	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet, &allSkill);
+	this->tauntButton = new TauntButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 
 	
 	image = loadLogo(wxT("\\clock.png"));
@@ -106,6 +109,11 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 		image = loadLogo(wxT("\\coin\\coin" + to_string(i) + ".png"));
 		image.Rescale(image.GetWidth() / 8, image.GetHeight() / 8);
 		coin.push_back(new wxBitmap(image));
+	}
+
+	for (int i = 1; i < 9; i++) {
+		image = loadLogo(wxT("\\meteor\\meteor" + to_string(i) + ".png"));
+		meteorPng.push_back(new wxBitmap(image));
 	}
 
 	image = loadLogo(wxT("\\snow.png"));
@@ -228,6 +236,11 @@ MapGame::~MapGame()
 	for (auto it : coin) {
 		delete it;
 	}
+
+	for (auto it : allSkill) {
+		delete it;
+	}
+	delete curSkill;
 	delete nocoin;
 	delete nocointimer;
 	delete questImage1;
@@ -300,6 +313,10 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			it = allBullet.erase(it);
 			if (it == allBullet.end()) break;
 		}
+	}
+
+	for (auto it : allSkill) {
+		it->draw(pdc, &meteorPng);
 	}
 
 	for (auto it = allMonster.begin(); it != allMonster.end(); it++) {
@@ -434,6 +451,10 @@ void MapGame::OnClick(wxMouseEvent & event)
 		if (now.x1 <= x && x <= now.x2) {
 			if (now.y1 <= y && y <= now.y2) {
 				yes = true;
+				if (i == 1) {
+					activeButton = meteorButton;
+					wxMessageOutputDebug().Printf("CUK");
+				}
 				if (user->money >= 100) {
 					if (i == 3) {
 						activeButton = basicButton;

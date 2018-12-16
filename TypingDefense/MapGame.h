@@ -14,11 +14,13 @@
 #include "TauntTower.h"
 #include "StunTower.h"
 #include "UserButton.h"
+#include "MeteorButton.h"
 #include "BasicButton.h"
 #include "SlowButton.h"
 #include "StunButton.h"
 #include "TauntButton.h"
 #include "Level.h"
+#include "Skill.h"
 
 using namespace std;
 
@@ -38,12 +40,13 @@ private:
 	wxSize coinSize;
 	wxImage image;
 	Tower *tower, *placeholder;
+	Skill *curSkill;
 	wxButton *backToMainMenu;
 	wxStatusBar *mapStatusBar;
 	wxImage loadLogo(wxString path);
 	vector<koordinatBox> skillButton;
 	vector<Monster*> allMonster;
-	vector<wxBitmap*> skill, animationMonster, coin;
+	vector<wxBitmap*> skill, animationMonster, coin, meteorPng;
 	vector<Bullet*> allBullet;
 	wxTimer *timer;
 	wxTimer *questTimer;
@@ -57,9 +60,11 @@ private:
 	clock_t statusTimer;
 	int questInterval;
 	vector<Tower*> allTower;
+	vector<Skill*> allSkill;
 	void changeWindow();
 	int randNum(int low, int high);
 	UserButton *activeButton;
+	MeteorButton *meteorButton;
 	BasicButton *basicButton;
 	SlowButton *slowButton;
 	StunButton *stunButton;
