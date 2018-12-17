@@ -15,7 +15,7 @@ void Meteor::active(wxBufferedPaintDC &pdc, vector<wxBitmap*> * png)
 		idx++;
 	}
 	else {
-		pdc.DrawBitmap(*(*png)[idx], wxPoint(this->centerX, this->centerY));
+		pdc.DrawBitmap(*(*png)[idx], wxPoint(this->centerX - 50, this->centerY - 50));
 		if (!(*allMonster).empty()) {
 			for (auto it : *allMonster) {
 				double dist = sqrt((this->centerX - it->getX()) * (this->centerX - it->getX()) + (this->centerY - it->getY()) * (this->centerY - it->getY()));

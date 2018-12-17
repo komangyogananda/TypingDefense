@@ -13,9 +13,11 @@ void Snow::active(wxBufferedPaintDC &pdc, std::vector<wxBitmap*>* png)
 {
 	int i = this->centerX;
 	int j = this->centerY;
-	int limX = i + 100;
-	int limY = j + 100;
+	int limX = i + 50;
+	int limY = j + 50;
 	pdc.DrawBitmap(*(*png)[0], wxPoint(i, j));
+	i -= 50;
+	j -= 50;
 
 	if (!(*allMonster).empty()) {
 		for (auto it : *allMonster) {
