@@ -14,7 +14,7 @@ SnowButton::SnowButton(MapGame * map, std::vector<Tower*>* allTower, std::vector
 
 SnowButton::~SnowButton()
 {
-	//delete skill;
+	delete skill;
 }
 
 void SnowButton::execute()

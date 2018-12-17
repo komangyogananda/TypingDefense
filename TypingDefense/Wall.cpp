@@ -68,7 +68,7 @@ Wall::~Wall()
 	i -= 25;
 	j -= 50;
 
-	if (!(*allMonster).empty()) {
+	if (allMonster != nullptr && !(*allMonster).empty()) {
 		for (auto it : *allMonster) {
 			int x = it->getX();
 			int y = it->getY();

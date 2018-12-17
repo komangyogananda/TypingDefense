@@ -113,6 +113,12 @@ MapGame::MapGame(wxFrame * parent, User* user) : wxWindow(parent, wxID_ANY)
 	image = loadLogo(wxT("\\pause.png"));
 	pauseBar = new wxBitmap(image);
 
+	image = loadLogo(wxT("\\stage.png"));
+	levelUpImage = new wxBitmap(image);
+
+	image = loadLogo(wxT("\\wave.png"));
+	waveIncoming = new wxBitmap(image);
+
 	for (int i = 1; i < 13; i++) {
 		image = loadLogo(wxT("\\monster\\monster" + to_string(i) + ".png"));
 		image.Rescale(70, 70);
@@ -242,10 +248,10 @@ int MapGame::randNum(int low, int high)
 
 MapGame::~MapGame()
 {
-	for (auto it : allBullet) {
+	for (auto it : allSkill) {
 		delete it;
 	}
-	for (auto it : allMonster) {
+	for (auto it : allBullet) {
 		delete it;
 	}
 	for (auto it : allTower) {
@@ -257,18 +263,27 @@ MapGame::~MapGame()
 	for (auto it : animationMonster) {
 		delete it;
 	}
-
 	for (auto it : coin) {
 		delete it;
 	}
-
-	for (auto it : allSkill) {
-		delete it;
-	}
-
 	for (auto it : towerImage) {
 		delete it;
 	}
+	for (auto it : meteorPng) {
+		delete it;
+	}
+	for (auto it : snowPng) {
+		delete it;
+	}
+	for (auto it : wallPng) {
+		delete it;
+	}
+	for (auto it : allMonster) {
+		delete it;
+	}
+	delete meteorButton;
+	delete snowButton;
+	delete wallButton;
 	delete curSkill;
 	delete nocoin;
 	delete nocointimer;
@@ -279,18 +294,17 @@ MapGame::~MapGame()
 	delete timer;
 	delete questTimer;
 	delete quest;
-	delete user;
 	delete questClock;
 	delete spawnTimer;
-	delete activeButton;
 	delete basicButton;
 	delete slowButton;
 	delete stunButton;
 	delete tauntButton;
-	delete meteorButton;
-	delete snowButton;
-	delete wallButton;
 	delete level;
+	delete levelUpImage;
+	delete waveIncoming;
+	delete pauseBar;
+	delete questBackground;
 }
 
 wxImage MapGame::loadLogo(wxString path) {
@@ -341,6 +355,11 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			if (it == allBullet.end()) break;
 		}
 		else if ((*it)->getTargetMonster() == nullptr) {
+			delete *it;
+			it = allBullet.erase(it);
+			if (it == allBullet.end()) break;
+		}
+		else if ((*it)->getTargetMonster()->mati()) {
 			delete *it;
 			it = allBullet.erase(it);
 			if (it == allBullet.end()) break;
@@ -401,6 +420,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 				user->score += 30;
 			}
 			delete *it;
+			level->setDiedMonster(level->getDiedMonster() + 1);
 			it = allMonster.erase(it);
 			if (it == allMonster.end()) break;
 		}
@@ -503,12 +523,19 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 		}
 	}
 
+	if (drawWaveImage) {
+		pdc.DrawBitmap(*waveIncoming, wxPoint(0, 0), true);
+	}
+
+	if (drawLevelUpImage) {
+		pdc.DrawBitmap(*levelUpImage, wxPoint(0, 0), true);
+	}
+
 	if (pause) {
 		pdc.DrawBitmap(*pauseBar, wxPoint(0, 0), true);
 		timerInterval = timer->GetInterval();
 		timer->Stop();
 	}
-	
 
 }
 
@@ -518,7 +545,7 @@ void MapGame::OnClick(wxMouseEvent & event)
 	int x = event.GetX();
 	int y = event.GetY();
 
-	wxMessageOutputDebug().Printf("x = %d, y = %d", x, y);
+	//wxMessageOutputDebug().Printf("x = %d, y = %d", x, y);
 
 	for (int i = 0; i < skillButton.size(); i++) {
 		koordinatBox now = skillButton[i];
@@ -545,7 +572,7 @@ void MapGame::OnClick(wxMouseEvent & event)
 					activeButton = wallButton;
 					return;
 				}
-				else if (user->money >= 100) {
+				if (user->money >= 100 && i > 2) {
 					if (i == 3) {
 						activeButton = basicButton;
 						return;
@@ -563,7 +590,7 @@ void MapGame::OnClick(wxMouseEvent & event)
 						return;
 					}
 				}
-				else {
+				else if (i > 2){
 					nocoinstatus = true;
 					nocointimer->Start(2000);
 				}
@@ -612,6 +639,21 @@ void MapGame::OnClick(wxMouseEvent & event)
 }
 
 void MapGame::OnTimer(wxTimerEvent &event) {
+	if (level->getLaunchedMonster() == level->getTotalMonster() / 2 && !drawWaveImage) {
+		spawnTimer->Stop();
+	}
+	if (level->getDiedMonster() == level->getTotalMonster() / 2 && !drawWaveImage && level->getLaunchedMonster() == level->getTotalMonster() / 2) {
+		drawWaveImage = true;
+		spawnTimer->Start(5000);
+	}
+	if (level->getLaunchedMonster() == level->getTotalMonster()) {
+		spawnTimer->Stop();
+	}
+	if (level->getDiedMonster() == level->getTotalMonster()) {
+		this->LevelUp();
+		spawnTimer->Start(10000);
+		return;
+	}
 	if (user->lifePoint == 0) {
 		fstream in;
 		in.open("scores.txt", fstream::app);
@@ -664,51 +706,29 @@ void MapGame::NoCoin(wxTimerEvent & event)
 
 void MapGame::SpawnMonster(wxTimerEvent & event)
 {
-	wxMessageOutputDebug().Printf("%.2lf", level->getTimePerMonster());
+	//wxMessageOutputDebug().Printf("%d", level->getDiedMonster());	
 	Monster *spawn;
-	if (level->getLaunchedMonster() == level->getTotalMonster()) {
-		this->LevelUp();
-		spawnTimer->Start(15000);
-		return;
-	}
-	if (level->getLaunchedMonster() >= level->getTotalMonster() / 2) {
-		int location = randNum(1, 3);
-		int targetY = randNum(0.25*h, 0.68*h);
-		if (location == 1) {
-			int y = randNum(0.32*h, 0.5*h);
-			spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
-		}
-		else if (location == 2) {
-			int x = randNum(0.5*w, 0.62*w);
-			spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
-		}
-		else if (location == 3) {
-			int x = randNum(0.5*w, 0.62*w);
-			spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
-		}
-		allMonster.push_back(spawn);
-		level->setLaunchedMonster(level->getLaunchedMonster() + 1);
+	if (drawLevelUpImage) drawLevelUpImage = false;
+	if (drawWaveImage) {
+		drawWaveImage = false;
 		spawnTimer->Start(100);
 	}
-	else {
-		int location = randNum(1, 3);
-		int targetY = randNum(0.25*h, 0.68*h);
-		if (location == 1) {
-			int y = randNum(0.32*h, 0.5*h);
-			spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
-		}
-		else if (location == 2) {
-			int x = randNum(0.5*w, 0.62*w);
-			spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
-		}
-		else if (location == 3) {
-			int x = randNum(0.5*w, 0.62*w);
-			spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
-		}
-		allMonster.push_back(spawn);
-		level->setLaunchedMonster(level->getLaunchedMonster() + 1);
-		spawnTimer->Start(1000 * level->getTimePerMonster());
+	int location = randNum(1, 3);
+	int targetY = randNum(0.25*h, 0.68*h);
+	if (location == 1) {
+		int y = randNum(0.32*h, 0.5*h);
+		spawn = new Monster(this, 100, 35, 0, y, w, targetY, 1);
 	}
+	else if (location == 2) {
+		int x = randNum(0.5*w, 0.62*w);
+		spawn = new Monster(this, 100, 35, x, 0, w, targetY, 1);
+	}
+	else if (location == 3) {
+		int x = randNum(0.5*w, 0.62*w);
+		spawn = new Monster(this, 100, 35, x, h, w, targetY, 1);
+	}
+	allMonster.push_back(spawn);
+	level->setLaunchedMonster(level->getLaunchedMonster() + 1);
 }
 
 void MapGame::animationMinusHealthBar()
@@ -725,6 +745,7 @@ void MapGame::LevelUp()
 	int currlevel = level->getLevel();
 	delete level;
 	level = new Level(currlevel + 1);
+	drawLevelUpImage = true;
 }
 
 void MapGame::pauseGame()

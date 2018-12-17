@@ -60,7 +60,7 @@ Snow::~Snow()
 	int i = this->centerX - 150;
 	int j = this->centerY - 150;
 
-	if (!(*allMonster).empty()) {
+	if (allMonster != nullptr && !(*allMonster).empty()) {
 		for (auto it : *allMonster) {
 			int x = it->getX();
 			int y = it->getY();

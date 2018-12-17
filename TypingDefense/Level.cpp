@@ -12,6 +12,7 @@ Level::Level(int level)
 	this->timePerMonster = getTime();
 	this->totalMonster = 6 * this->level;
 	launchedMonster = 0;
+	diedMonster = 0;
 }
 
 int Level::getTotalMonster()
@@ -22,6 +23,16 @@ int Level::getTotalMonster()
 int Level::getLaunchedMonster()
 {
 	return launchedMonster;
+}
+
+int Level::getDiedMonster()
+{
+	return diedMonster;
+}
+
+void Level::setDiedMonster(int monster)
+{
+	this->diedMonster = monster;
 }
 
 double Level::getTimePerMonster()

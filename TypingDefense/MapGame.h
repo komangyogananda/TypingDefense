@@ -83,9 +83,11 @@ private:
 	wxBitmap *questBackground;
 	wxBitmap *pauseBar;
 	bool pause = false;
-	wxBitmap *stunTower, *basicTower, *slowTower, *tauntTower;
 	vector<wxBitmap*> towerImage;
-	
+	wxBitmap* levelUpImage;
+	wxBitmap* waveIncoming;
+	bool drawLevelUpImage = false;
+	bool drawWaveImage = false;
 
 public:
 	MapGame(wxFrame *parent, User* user);

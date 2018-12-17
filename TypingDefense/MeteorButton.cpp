@@ -29,7 +29,7 @@ void MeteorButton::execute()
 		int t = (dist(rng));
 		int x = (distX(rng));
 		int y = (distY(rng));
-		wxMessageOutputDebug().Printf("%d %d", x, y);
+		//wxMessageOutputDebug().Printf("%d %d", x, y);
 		fix = new Meteor(x, y, allMonster);
 		fix->setIdx(-t);
 		allSkill->push_back(fix);

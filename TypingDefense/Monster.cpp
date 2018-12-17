@@ -90,7 +90,7 @@ int Monster::draw(wxBufferedPaintDC &pdc, vector<wxBitmap*> *animation) {
 	//pdc.DrawCircle(wxPoint(x, y), r);*/
 	//idx = idx % 12;
 	//pdc.DrawBitmap(*(*animation)[idx++], wxPoint(x - 35, y - 35), false);
-	//pdc.SetBrush(wxBrush(wxTransparentColour, wxBRUSHSTYLE_TRANSPARENT));
+	//pdc.SetBrush(wxBrush(wxTransparentColour., wxBRUSHSTYLE_TRANSPARENT));
 	//pdc.SetPen(wxPen(wxColour(*wxWHITE)));
 	////pdc.DrawRectangle(x - 35, y - 35, 70, 70);
 	//pdc.DrawRectangle(x - 35, y + 35, 70, 5);

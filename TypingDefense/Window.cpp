@@ -3,12 +3,13 @@
 #include <wx/filename.h>
 #include "MapGame.h"
 #include "Frame.h"
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include "User.h"
 #include <sstream>
+#include <string>
+#include <algorithm>
 
-using namespace std;
 BEGIN_EVENT_TABLE(Window, wxWindow)
 	EVT_PAINT(Window::OnPaint)
 	EVT_LEFT_DOWN(Window::OnClick)
@@ -130,7 +131,7 @@ void Window::OnClick(wxMouseEvent& event)
 	int y = event.GetY();
 	int w, h;
 	this->parent->GetSize(&w, &h);
-	wxMessageOutputDebug().Printf("x = %d, y = %d", x, y);
+	//wxMessageOutputDebug().Printf("x = %d, y = %d", x, y);
 	int X1 = 760 * w / 1920;
 	int playGameY1 = 556 * h / 1080;
 	int X2 = 1160 * w / 1920;
