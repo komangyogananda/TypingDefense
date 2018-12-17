@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <fstream>
 
 BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_KEY_DOWN(MapGame::OnKeyDown)
@@ -59,7 +60,9 @@ MapGame::MapGame(wxFrame * parent, User* user) : wxWindow(parent, wxID_ANY)
 	questTimer = new wxTimer(this, 2001);
 	questTimer->Start(3000);
 	this->now = clock();
-	
+	this->wallCD = this->snowCD = this->meteorCD = clock() - (30 * CLOCKS_PER_SEC);
+	this->cooldownTimer = clock();
+
 	background = nullptr;
 	
 	/*Monster *test = new Monster(this, 100, 35, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
@@ -326,6 +329,7 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	for (int i = 0; i < skillButton.size(); i++) {
 		pdc.DrawBitmap(*skill[i], wxPoint(skillButton[i].x1, skillButton[i].y1), true);
 	}
+	drawCooldown(pdc);
 
 	for (auto it = allBullet.begin(); it != allBullet.end(); it++) {
 		int kondisi = (*it)->checkCollision();
@@ -522,13 +526,22 @@ void MapGame::OnClick(wxMouseEvent & event)
 			if (now.y1 <= y && y <= now.y2) {
 				yes = true;
 				if (i == 0) {
+					if ((double)(clock() - snowCD) / CLOCKS_PER_SEC < 30) {
+						return;
+					}
 					activeButton = snowButton;
 					return;
 				}
 				if (i == 1) {
+					if ((double)(clock() - meteorCD) / CLOCKS_PER_SEC < 30) {
+						return;
+					}
 					activeButton = meteorButton;
 				}
 				if (i == 2) {
+					if ((double)(clock() - wallCD) / CLOCKS_PER_SEC < 30) {
+						return;
+					}
 					activeButton = wallButton;
 					return;
 				}
@@ -559,9 +572,22 @@ void MapGame::OnClick(wxMouseEvent & event)
 	}
 
 	if (activeButton != nullptr) {
+		SnowButton* a = dynamic_cast<SnowButton*>(activeButton);
+		MeteorButton* b = dynamic_cast<MeteorButton*>(activeButton);
+		WallButton* c = dynamic_cast<WallButton*>(activeButton);
+		if (a != nullptr) {
+			snowCD = clock();
+		}
+		else if (b != nullptr) {
+			meteorCD = clock();
+		}
+		else if (c != nullptr) {
+			wallCD = clock();
+		}
 		activeButton->execute();
 		activeButton = nullptr;
 	}
+
 
 	int menuX1 = 761 * w / 1920;
 	int pauseY1 = 425 * h / 1080;
@@ -587,6 +613,10 @@ void MapGame::OnClick(wxMouseEvent & event)
 
 void MapGame::OnTimer(wxTimerEvent &event) {
 	if (user->lifePoint == 0) {
+		fstream in;
+		in.open("scores.txt", fstream::app);
+		in << user->getNama() << " " << user->getScore() << "\n";
+		in.close();
 		changeWindow();
 		return;
 	}
@@ -721,6 +751,48 @@ void MapGame::resumeGame()
 	nocointimer->Start(nocointimerInterval);
 	nocointimerInterval = -1;
 	pause = false;
+}
+
+void MapGame::drawCooldown(wxBufferedPaintDC& pdc)
+{
+	auto current = clock();
+	double snowPercent = max(0.0, (30.0 - ((double)(clock() - snowCD) / CLOCKS_PER_SEC)) / 30.0);
+	double meteorPercent = max(0.0, (30.0 - ((double)(clock() - meteorCD) / CLOCKS_PER_SEC)) / 30.0);
+	double wallPercent = max(0.0, (30.0 - ((double)(clock() - wallCD) / CLOCKS_PER_SEC)) / 30.0);
+	double afterCalcSnow = (snowPercent == 0.0) ? 1 : snowPercent;
+	double afterCalcMeteor = (meteorPercent == 0.0) ? 1 : meteorPercent;
+	double afterCalcWall = (wallPercent == 0.0) ? 1 : wallPercent;
+	double w1 = skillButton[0].x2 - skillButton[0].x1;
+	double w2 = skillButton[1].x2 - skillButton[1].x1;
+	double w3 = skillButton[2].x2 - skillButton[2].x1;
+	wxGraphicsContext *gc = wxGraphicsContext::Create(pdc);
+	if (gc)
+	{
+		//gc->SetPen(*wxWHITE_PEN);
+		gc->SetBrush(wxColor(0, 0, 0, 200));
+		wxGraphicsPath path = gc->CreatePath();
+		if (snowPercent != 0.0)
+			path.AddRectangle(skillButton[0].x1, skillButton[0].y1, skillButton[0].x2 - skillButton[0].x1, skillButton[0].y2 - skillButton[0].y1);
+		if (meteorPercent != 0.0) 
+			path.AddRectangle(skillButton[1].x1, skillButton[1].y1, skillButton[1].x2 - skillButton[1].x1, skillButton[1].y2 - skillButton[1].y1);
+		if (wallPercent != 0.0)
+			path.AddRectangle(skillButton[2].x1, skillButton[2].y1, skillButton[2].x2 - skillButton[2].x1, skillButton[2].y2 - skillButton[2].y1);
+		gc->FillPath(path);
+		gc->StrokePath(path);
+		delete gc;
+	}
+	pdc.SetBrush(wxBrush((wxTransparentColor), wxBRUSHSTYLE_TRANSPARENT));
+	pdc.DrawRectangle(wxPoint(skillButton[0].x1, skillButton[0].y1 + 80), wxSize(w1, 10));
+	pdc.SetBrush(wxColor(255, 255, 51));
+	pdc.DrawRectangle(wxPoint(skillButton[0].x1, skillButton[0].y1 + 80), wxSize(w1 * afterCalcSnow, 10));
+	pdc.SetBrush(wxBrush((wxTransparentColor), wxBRUSHSTYLE_TRANSPARENT));
+	pdc.DrawRectangle(wxPoint(skillButton[1].x1, skillButton[1].y1 + 80), wxSize(w2, 10));
+	pdc.SetBrush(wxColor(255, 255, 51));
+	pdc.DrawRectangle(wxPoint(skillButton[1].x1, skillButton[1].y1 + 80), wxSize(w2 * afterCalcMeteor, 10));
+	pdc.SetBrush(wxBrush((wxTransparentColor), wxBRUSHSTYLE_TRANSPARENT));
+	pdc.DrawRectangle(wxPoint(skillButton[2].x1, skillButton[2].y1 + 80), wxSize(w3, 10));
+	pdc.SetBrush(wxColor(255, 255, 51));
+	pdc.DrawRectangle(wxPoint(skillButton[2].x1, skillButton[2].y1 + 80), wxSize(w3 * afterCalcWall, 10));
 }
 
 User * MapGame::getUser()

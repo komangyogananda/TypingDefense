@@ -17,6 +17,7 @@ public:
 	void setNama(string nama);
 	void setLevel(int level);
 	int getLevel();
+	int getScore();
 	~User();
 };
 

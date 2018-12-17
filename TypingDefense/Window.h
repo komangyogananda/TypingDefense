@@ -1,7 +1,20 @@
 #pragma once
 #include "wx/wx.h"
+#include <vector>
+
+using namespace std;
 
 class User;
+
+struct score {
+	string name;
+	int val;
+	bool operator<(const score& other) const {
+		if (val != other.val)
+			return val > other.val;
+		return name < other.name;
+	}
+};
 
 class Window : public wxWindow
 {
@@ -20,6 +33,7 @@ private:
 	User *user;
 	bool editStatus = false;
 	clock_t cursor;
+	vector<score> scores;
 
 public:
 	Window(wxFrame *parent, User* user);

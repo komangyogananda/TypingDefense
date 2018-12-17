@@ -39,6 +39,11 @@ int User::getLevel()
 	return level;
 }
 
+int User::getScore()
+{
+	return score;
+}
+
 User::~User()
 {
 }

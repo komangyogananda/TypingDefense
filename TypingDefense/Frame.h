@@ -10,6 +10,7 @@ class Frame : public wxFrame
 private:
 	wxWindow *window;
 	User *user;
+
 public:
 	Frame(const wxString &title);
 	void setCurrentWindow(int a);

@@ -61,6 +61,8 @@ private:
 	Quest *quest;
 	clock_t now = clock();
 	clock_t statusTimer;
+	clock_t cooldownTimer;
+	clock_t meteorCD, snowCD, wallCD;
 	int questInterval;
 	vector<Tower*> allTower;
 	vector<Skill*> allSkill;
@@ -100,6 +102,7 @@ public:
 	void LevelUp();
 	void pauseGame();
 	void resumeGame();
+	void drawCooldown(wxBufferedPaintDC&);
 	User* getUser();
 };
 

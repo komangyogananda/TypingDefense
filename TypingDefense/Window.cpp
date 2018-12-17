@@ -4,7 +4,9 @@
 #include "MapGame.h"
 #include "Frame.h"
 #include<iostream>
+#include <fstream>
 #include "User.h"
+#include <sstream>
 
 using namespace std;
 BEGIN_EVENT_TABLE(Window, wxWindow)
@@ -16,6 +18,25 @@ END_EVENT_TABLE()
 
 Window::Window(wxFrame *parent, User* user) : wxWindow(parent, wxID_ANY)
 {
+	ifstream in;
+	in.open("scores.txt");
+	string line;
+	int cnt = 0;
+	while (getline(in, line)) {
+		cnt++;
+		int tmp = 0;
+		int mult = 1;
+		int i = line.size() - 1;
+		for (; isdigit(line[i]); i--) {
+			tmp = tmp + mult * (line[i] - '0');
+			mult = mult * 10;
+		}
+		line = line.substr(0, i);
+		scores.push_back({ line, tmp });
+		if (cnt == 5) break;
+	}
+	in.close();
+	sort(scores.begin(), scores.end());
 	this->SetFocus();
 	this->parent = parent;
 	parent->GetSize(&width, &height);
@@ -37,6 +58,7 @@ Window::Window(wxFrame *parent, User* user) : wxWindow(parent, wxID_ANY)
 	this->user = user;
 	cursor = clock();
 }
+
 
 Window::~Window()
 {
@@ -66,6 +88,17 @@ void Window::OnPaint(wxPaintEvent& event) {
 	}
 	if (drawHighScore) {
 		pdc.DrawBitmap(*hsimage, wxPoint(0, 0), true);
+		int y = (parent->GetSize()).GetY() / 2 - 100;
+		int x = (parent->GetSize()).GetX() / 2 - 400;
+		for (int i = 0; i < scores.size(); i++) {
+			string now = scores[i].name;
+			int cur = scores[i].val;
+			wxFont fontNama(25, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+			pdc.SetFont(fontNama);
+			pdc.SetTextForeground(*wxWHITE);
+			pdc.DrawText(to_string(i + 1) + ". " + now + " " + to_string(cur), wxPoint(x, y));
+			y += 50;
+		}
 	}
 	int textX = 780 * w / 1920;
 	int textY = 930 * h / 1080;
@@ -78,7 +111,6 @@ void Window::OnPaint(wxPaintEvent& event) {
 		}
 	}
 	pdc.DrawText(nama, wxPoint(textX, textY));
-	wxMessageOutputDebug().Printf("%d", editStatus);
 }
 
 void Window::OnButtonClick(wxCommandEvent& event)
