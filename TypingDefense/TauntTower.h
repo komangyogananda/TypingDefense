@@ -9,8 +9,8 @@ private:
 	wxTimer *timer;
 
 public:
-	TauntTower(double x, double y, vector<Monster*> &allMonster);
-	TauntTower(double x, double y);
+	TauntTower(double x, double y, vector<Monster*> &allMonster, vector<wxBitmap*> *bmp);
+	TauntTower(double x, double y, vector<wxBitmap*> *bmp);
 	~TauntTower();
 	void skill(wxTimerEvent &event);
 };

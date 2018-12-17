@@ -27,7 +27,7 @@ void BasicTower::skill(wxTimerEvent &event)
 	}
 }
 
-BasicTower::BasicTower(double x, double y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet) : Tower(x, y, &allMonster)
+BasicTower::BasicTower(double x, double y, vector<Monster*> &allMonster, vector<Bullet*> &allBullet, vector<wxBitmap*> *bmp) : Tower(x, y, &allMonster, bmp)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
@@ -35,15 +35,17 @@ BasicTower::BasicTower(double x, double y, vector<Monster*> &allMonster, vector<
 	this->r = 255;
 	this->g = 0;
 	this->b = 0;
+	this->setGambar();
 }
 
-BasicTower::BasicTower(double x, double y) : Tower(x, y, nullptr)
+BasicTower::BasicTower(double x, double y, vector<wxBitmap*> *bmp) : Tower(x, y, nullptr, bmp)
 {
 	this->timer = new wxTimer(this, -1);
 	this->allBullet = nullptr;
 	this->r = 255;
 	this->g = 0;
 	this->b = 0;
+	this->setGambar();
 }
 
 

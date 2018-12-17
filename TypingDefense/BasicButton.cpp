@@ -3,10 +3,11 @@
 #include "BasicTower.h"
 #include "MapGame.h"
 
-BasicButton::BasicButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+BasicButton::BasicButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill, std::vector<wxBitmap*> *bmp)
 	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
-	this->tower = new BasicTower(1,1);
+	this->bmp = bmp;
+	this->tower = new BasicTower(1,1, bmp);
 }
 
 
@@ -17,7 +18,7 @@ BasicButton::~BasicButton()
 
 void BasicButton::execute()
 {
-	fix = new BasicTower(tower->getX(), tower->getY(), *allMonster, *allBullet);
+	fix = new BasicTower(tower->getX(), tower->getY(), *allMonster, *allBullet, this->bmp);
 	allTower->push_back(fix);
 	this->map->getUser()->setMoney(this->map->getUser()->getMoney() - 100);
 }

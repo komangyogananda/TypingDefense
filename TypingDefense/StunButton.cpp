@@ -3,10 +3,11 @@
 #include "StunTower.h"
 #include "MapGame.h"
 
-StunButton::StunButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+StunButton::StunButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill, std::vector<wxBitmap*> *bmp)
 	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
-	this->tower = new StunTower(1, 1);
+	this->bmp = bmp;
+	this->tower = new StunTower(1, 1, bmp);
 }
 
 
@@ -17,7 +18,7 @@ StunButton::~StunButton()
 
 void StunButton::execute()
 {
-	fix = new StunTower(tower->getX(), tower->getY(), *allMonster);
+	fix = new StunTower(tower->getX(), tower->getY(), *allMonster, this->bmp);
 	allTower->push_back(fix);
 	this->map->getUser()->setMoney(this->map->getUser()->getMoney() - 100);
 }

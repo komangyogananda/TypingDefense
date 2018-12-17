@@ -16,7 +16,6 @@ BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_TIMER(2001, MapGame::QuestGiver)
 	EVT_TIMER(2002, MapGame::SpawnMonster)
 	EVT_TIMER(2003, MapGame::NoCoin)
-	EVT_BUTTON(1001, MapGame::OnButtonClick)
 	EVT_LEFT_DOWN(MapGame::OnClick)
 	EVT_PAINT(MapGame::OnPaint)
 END_EVENT_TABLE()
@@ -24,6 +23,18 @@ END_EVENT_TABLE()
 MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 {
 	srand(time(0));
+
+	image = loadLogo(wxT("\\towerBasic.png"));
+	towerImage.push_back(new wxBitmap(image));
+
+	image = loadLogo(wxT("\\towerSlow.png"));
+	towerImage.push_back(new wxBitmap(image));
+
+	image = loadLogo(wxT("\\towerTaunt.png"));
+	towerImage.push_back(new wxBitmap(image));
+
+	image = loadLogo(wxT("\\towerStun.png"));
+	towerImage.push_back(new wxBitmap(image));
 
 	this->SetFocus();
 	
@@ -49,7 +60,6 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	questTimer->Start(3000);
 	this->now = clock();
 	
-	backToMainMenu = new wxButton(this, 1001, wxT("Back To Main Menu"), wxRealPoint(w - 200.431, h - 200.456), wxDefaultSize);
 	background = nullptr;
 	mapStatusBar = new wxStatusBar(this->parent, -1);
 	status = "default";
@@ -57,9 +67,6 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	
 	/*Monster *test = new Monster(this, 100, 35, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
 	allMonster.push_back(test);*/
-
-	tower = new StunTower(1300, 450, allMonster);
-	allTower.push_back(tower);
 
 	image = loadLogo(wxT("\\Map.png"));
 	wxSize a = image.GetSize();
@@ -74,10 +81,10 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	this->activeButton = nullptr;
 	this->meteorButton = new MeteorButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 	this->snowButton = new SnowButton(this, &allTower, &allMonster, &allBullet, &allSkill);
-	this->basicButton = new BasicButton(this, &allTower, &allMonster, &allBullet, &allSkill);
-	this->slowButton = new SlowButton(this, &allTower, &allMonster, &allBullet, &allSkill);
-	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet, &allSkill);
-	this->tauntButton = new TauntButton(this, &allTower, &allMonster, &allBullet, &allSkill);
+	this->basicButton = new BasicButton(this, &allTower, &allMonster, &allBullet, &allSkill, &towerImage);
+	this->slowButton = new SlowButton(this, &allTower, &allMonster, &allBullet, &allSkill, &towerImage);
+	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet, &allSkill, &towerImage);
+	this->tauntButton = new TauntButton(this, &allTower, &allMonster, &allBullet, &allSkill, &towerImage);
 
 	image = loadLogo(wxT("\\quest.png"));
 	image.Rescale(w, h);
@@ -101,6 +108,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	image = loadLogo(wxT("\\questImage3.png"));
 	image.Rescale(120, 120);
 	questImage3 = new wxBitmap(image);
+
+	image = loadLogo(wxT("\\pause.png"));
+	pauseBar = new wxBitmap(image);
 
 	for (int i = 1; i < 13; i++) {
 		image = loadLogo(wxT("\\monster\\monster" + to_string(i) + ".png"));
@@ -205,6 +215,9 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 
 	level = new Level(1);
 	spawnTimer->Start(1000 * level->getTimePerMonster());
+
+	/*tower = new StunTower(1300, 450, allMonster, &towerImage);
+	allTower.push_back(tower);*/
 }
 
 void MapGame::changeWindow()
@@ -247,6 +260,10 @@ MapGame::~MapGame()
 	for (auto it : allSkill) {
 		delete it;
 	}
+
+	for (auto it : towerImage) {
+		delete it;
+	}
 	delete curSkill;
 	delete nocoin;
 	delete nocointimer;
@@ -255,7 +272,6 @@ MapGame::~MapGame()
 	delete questImage3;
 	delete mapStatusBar;
 	delete background;
-	delete backToMainMenu;
 	delete timer;
 	delete questTimer;
 	delete quest;
@@ -467,6 +483,12 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			pdc.DrawText((this->quest)->getErrorMessage(), wxPoint(100, wxGetDisplaySize().GetHeight() - 200));
 		}
 	}
+
+	if (pause) {
+		pdc.DrawBitmap(*pauseBar, wxPoint(0, 0), true);
+		timerInterval = timer->GetInterval();
+		timer->Stop();
+	}
 	
 
 }
@@ -476,7 +498,8 @@ void MapGame::OnClick(wxMouseEvent & event)
 	bool yes = false;
 	int x = event.GetX();
 	int y = event.GetY();
-	status = "x = " + to_string(x) + " y = " + to_string(y);
+
+	wxMessageOutputDebug().Printf("x = %d, y = %d", x, y);
 
 	for (int i = 0; i < skillButton.size(); i++) {
 		koordinatBox now = skillButton[i];
@@ -522,13 +545,24 @@ void MapGame::OnClick(wxMouseEvent & event)
 		activeButton = nullptr;
 	}
 
-}
+	int menuX1 = 761 * w / 1920;
+	int pauseY1 = 425 * h / 1080;
+	int menuX2 = 1163 * w / 1920;
+	int pauseY2 = 504 * h / 1080;
 
-void MapGame::OnButtonClick(wxCommandEvent & event)
-{
-	if (event.GetId() == 1001) {
-		changeWindow();
+	int mainMenuY1 = 570 * h / 1080;
+	int mainMenuY2 = 658 * h / 1080;
+
+	if (menuX1 <= x && x <= menuX2) {
+		if (pauseY1 <= y && y <= pauseY2) {
+			resumeGame();
+		}
+		else if (mainMenuY1 <= y && y <= mainMenuY2) {
+			changeWindow();
+		}
+		return;
 	}
+
 }
 
 void MapGame::OnTimer(wxTimerEvent &event) {
@@ -546,6 +580,9 @@ void MapGame::OnKeyDown(wxKeyEvent & event)
 {
 	if (event.GetKeyCode() == WXK_BACK)
 		(this->quest)->remCurrent();
+	else if (event.GetKeyCode() == 27) {
+		pauseGame();
+	}
 	else event.Skip();
 }
 
@@ -639,6 +676,32 @@ void MapGame::LevelUp()
 	delete level;
 	status = to_string(currlevel + 1);
 	level = new Level(currlevel + 1);
+}
+
+void MapGame::pauseGame()
+{
+	/*timerInterval = timer->GetInterval();
+	timer->Stop();*/
+	questTimerInterval = questTimer->GetInterval();
+	questTimer->Stop();
+	spawnTimerInterval = spawnTimer->GetInterval();
+	spawnTimer->Stop();
+	nocointimerInterval = nocointimer->GetInterval();
+	nocointimer->Stop();
+	pause = true;
+}
+
+void MapGame::resumeGame()
+{
+	timer->Start(timerInterval);
+	timerInterval = -1;
+	questTimer->Start(questTimerInterval);
+	questTimerInterval = -1;
+	spawnTimer->Start(spawnTimerInterval);
+	spawnTimerInterval = -1;
+	nocointimer->Start(nocointimerInterval);
+	nocointimerInterval = -1;
+	pause = false;
 }
 
 User * MapGame::getUser()

@@ -19,9 +19,11 @@ protected:
 	vector<Monster*> *allMonster;
 	double jarak(Monster* monsterNear);
 	bool active;
+	wxBitmap *gambar;
+	vector<wxBitmap*> *bmp;
 
 public:
-	Tower(double x, double y, vector<Monster*> *allMonster);
+	Tower(double x, double y, vector<Monster*> *allMonster, vector<wxBitmap*> *bmp);
 	~Tower();
 	void draw(wxBufferedPaintDC &pdc);
 	void drawPlaceholder(wxBufferedPaintDC &pdc);
@@ -29,6 +31,7 @@ public:
 	void setY(double y);
 	int getX();
 	int getY();
+	void setGambar();
 	virtual void skill(wxTimerEvent &event) = 0;
 };
 

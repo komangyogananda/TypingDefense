@@ -1,2 +1,8 @@
-﻿  Snow.cpp
-  TypingDefense.vcxproj -> C:\TypingDefense\Debug\TypingDefense.exe
+﻿  BasicButton.cpp
+  MapGame.cpp
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(321): warning C4018: '<': signed/unsigned mismatch
+c:\users\komangyogananda\source\repos\typingdefense\typingdefense\mapgame.cpp(504): warning C4018: '<': signed/unsigned mismatch
+  StunTower.cpp
+  TauntTower.cpp
+  Generating Code...
+  TypingDefense.vcxproj -> C:\Users\komangyogananda\source\repos\TypingDefense\Debug\TypingDefense.exe

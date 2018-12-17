@@ -3,10 +3,11 @@
 #include "TauntTower.h"
 #include "MapGame.h"
 
-TauntButton::TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+TauntButton::TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill, std::vector<wxBitmap*> *bmp)
 	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
-	this->tower = new TauntTower(1, 1);
+	this->bmp = bmp;
+	this->tower = new TauntTower(1, 1, bmp);
 }
 
 
@@ -17,7 +18,7 @@ TauntButton::~TauntButton()
 
 void TauntButton::execute()
 {
-	fix = new TauntTower(tower->getX(), tower->getY(), *allMonster);
+	fix = new TauntTower(tower->getX(), tower->getY(), *allMonster, bmp);
 	allTower->push_back(fix);
 	this->map->getUser()->setMoney(this->map->getUser()->getMoney() - 100);
 }

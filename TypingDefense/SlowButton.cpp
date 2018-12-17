@@ -3,10 +3,11 @@
 #include "SlowTower.h"
 #include "MapGame.h"
 
-SlowButton::SlowButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill)
+SlowButton::SlowButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill, std::vector<wxBitmap*> *bmp)
 	: UserButton(map, allTower, allMonster, allBullet, allSkill)
 {
-	this->tower = new SlowTower(1, 1);
+	this->bmp = bmp;
+	this->tower = new SlowTower(1, 1, bmp);
 }
 
 
@@ -17,7 +18,7 @@ SlowButton::~SlowButton()
 
 void SlowButton::execute()
 {
-	fix = new SlowTower(tower->getX(), tower->getY(), *allMonster);
+	fix = new SlowTower(tower->getX(), tower->getY(), *allMonster, this->bmp);
 	allTower->push_back(fix);
 	this->map->getUser()->setMoney(this->map->getUser()->getMoney() - 100);
 }

@@ -44,7 +44,6 @@ private:
 	wxImage image;
 	Tower *tower, *placeholder;
 	Skill *curSkill;
-	wxButton *backToMainMenu;
 	wxStatusBar *mapStatusBar;
 	wxImage loadLogo(wxString path);
 	vector<koordinatBox> skillButton;
@@ -54,6 +53,7 @@ private:
 	wxTimer *timer;
 	wxTimer *questTimer;
 	wxTimer *spawnTimer;
+	int timerInterval, questTimerInterval, spawnTimerInterval;
 	string status;
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
@@ -75,13 +75,18 @@ private:
 	TauntButton *tauntButton;
 	bool nocoinstatus = false;
 	wxTimer *nocointimer;
+	int nocointimerInterval;
 	Level *level;
 	wxBitmap *questBackground;
+	wxBitmap *pauseBar;
+	bool pause = false;
+	wxBitmap *stunTower, *basicTower, *slowTower, *tauntTower;
+	vector<wxBitmap*> towerImage;
+	
 
 public:
 	MapGame(wxFrame *parent);
 	~MapGame();
-	void OnButtonClick(wxCommandEvent &event);
 	void OnPaint(wxPaintEvent &event);
 	void OnClick(wxMouseEvent &event);
 	void OnTimer(wxTimerEvent &event);
@@ -92,6 +97,8 @@ public:
 	void SpawnMonster(wxTimerEvent &event);
 	void animationMinusHealthBar();
 	void LevelUp();
+	void pauseGame();
+	void resumeGame();
 	User* getUser();
 };
 

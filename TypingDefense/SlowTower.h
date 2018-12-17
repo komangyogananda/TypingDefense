@@ -9,8 +9,8 @@ private:
 	wxTimer *timer;
 
 public:
-	SlowTower(double x, double y, vector<Monster*> &allMonster);
-	SlowTower(double x, double y);
+	SlowTower(double x, double y, vector<Monster*> &allMonster, vector<wxBitmap*> *bmp);
+	SlowTower(double x, double y, vector<wxBitmap*> *bmp);
 	~SlowTower();
 	void skill(wxTimerEvent &event);
 };

@@ -24,21 +24,23 @@ void TauntTower::skill(wxTimerEvent &event)
 	}
 }
 
-TauntTower::TauntTower(double x, double y, vector<Monster*> &allMonster) : Tower(x, y, &allMonster)
+TauntTower::TauntTower(double x, double y, vector<Monster*> &allMonster, vector<wxBitmap*> *bmp) : Tower(x, y, &allMonster, bmp)
 {
 	this->timer = new wxTimer(this, -1);
 	timer->Start(500);
 	this->r = 0;
 	this->g = 255;
 	this->b = 0;
+	this->setGambar();
 }
 
-TauntTower::TauntTower(double x, double y) : Tower(x, y, nullptr)
+TauntTower::TauntTower(double x, double y, vector<wxBitmap*> *bmp) : Tower(x, y, nullptr, bmp)
 {
 	this->timer = new wxTimer(this, -1);
 	this->r = 0;
 	this->g = 255;
 	this->b = 0;
+	this->setGambar();
 }
 
 

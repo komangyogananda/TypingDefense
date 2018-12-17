@@ -9,9 +9,10 @@ class TauntButton :
 private:
 	TauntTower *tower;
 	Tower* fix;
+	std::vector<wxBitmap*> *bmp;
 
 public:
-	TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill);
+	TauntButton(MapGame *map, std::vector<Tower*> *allTower, std::vector<Monster*> *allMonster, std::vector<Bullet*> *allBullet, std::vector<Skill*> *allSkill, std::vector<wxBitmap*> *bmp);
 	~TauntButton();
 	void execute();
 	void drawPlaceholder(wxBufferedPaintDC &pdc, wxMouseState &mouse);
