@@ -147,6 +147,11 @@ void Monster::setSlow(int slow)
 	this->slow = slow;
 }
 
+int Monster::getSlow()
+{
+	return this->slow;
+}
+
 void Monster::setTarget(double x, double y)
 {
 	this->targetX = x;

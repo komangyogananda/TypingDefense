@@ -18,6 +18,16 @@ int Skill::getCenterY()
 	return centerY;
 }
 
+void Skill::setCenterX(int x)
+{
+	this->centerX = x;
+}
+
+void Skill::setCenterY(int y)
+{
+	this->centerY = y;
+}
+
 Skill::~Skill()
 {
 }

@@ -141,6 +141,8 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SlowButton.cpp" />
     <ClCompile Include="SlowTower.cpp" />
+    <ClCompile Include="Snow.cpp" />
+    <ClCompile Include="SnowButton.cpp" />
     <ClCompile Include="StunButton.cpp" />
     <ClCompile Include="StunTower.cpp" />
     <ClCompile Include="TauntButton.cpp" />
@@ -164,6 +166,8 @@
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SlowButton.h" />
     <ClInclude Include="SlowTower.h" />
+    <ClInclude Include="Snow.h" />
+    <ClInclude Include="SnowButton.h" />
     <ClInclude Include="StunButton.h" />
     <ClInclude Include="StunTower.h" />
     <ClInclude Include="TauntButton.h" />

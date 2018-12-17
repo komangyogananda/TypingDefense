@@ -51,6 +51,7 @@ public:
 	double getSpeed;
 	void getDamage(int damage);
 	void setSlow(int slow);
+	int getSlow();
 	void setTarget(double x, double y);
 	void tauntedBy(Tower* taunt);
 	void stunnedBy(Tower* stun);

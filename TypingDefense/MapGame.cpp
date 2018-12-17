@@ -73,6 +73,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 
 	this->activeButton = nullptr;
 	this->meteorButton = new MeteorButton(this, &allTower, &allMonster, &allBullet, &allSkill);
+	this->snowButton = new SnowButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 	this->basicButton = new BasicButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 	this->slowButton = new SlowButton(this, &allTower, &allMonster, &allBullet, &allSkill);
 	this->stunButton = new StunButton(this, &allTower, &allMonster, &allBullet, &allSkill);
@@ -117,6 +118,10 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 		image = loadLogo(wxT("\\meteor\\meteor" + to_string(i) + ".png"));
 		meteorPng.push_back(new wxBitmap(image));
 	}
+
+	image = loadLogo(wxT("\\snow\\snow.png"));
+	image.Rescale(100, 100);
+	snowPng.push_back(new wxBitmap(image));
 
 	image = loadLogo(wxT("\\snow.png"));
 	image.Rescale(image.GetWidth() / 2, image.GetHeight() / 2);
@@ -318,16 +323,31 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 	}
 
 	for (auto it = allSkill.begin(); it != allSkill.end(); it++) {
-		
-		if ((*it)->getIdx() >= 8) {
+		Meteor* a = dynamic_cast<Meteor*>(*it);
+		Snow* b = dynamic_cast<Snow*>(*it);
+		if (a != nullptr) {
+			if ((*it)->getIdx() >= 8) {
 
-			delete *it;
-			it = allSkill.erase(it);
-			if (it == allSkill.end()) break;
+				delete *it;
+				it = allSkill.erase(it);
+				if (it == allSkill.end()) break;
 
+			}
+			else {
+				(*it)->active(pdc, &meteorPng);
+			}
 		}
-		else {
-			(*it)->active(pdc, &meteorPng);
+		else if (b != nullptr) {
+			wxMessageOutputDebug().Printf("%d", (*it)->getIdx());
+			if ((*it)->getIdx() >= 60) {
+				delete *it;
+				it = allSkill.erase(it);
+				if (it == allSkill.end()) break;
+
+			}
+			else {
+				(*it)->active(pdc, &snowPng);
+			}
 		}
 	}
 
@@ -463,10 +483,15 @@ void MapGame::OnClick(wxMouseEvent & event)
 		if (now.x1 <= x && x <= now.x2) {
 			if (now.y1 <= y && y <= now.y2) {
 				yes = true;
+				if (i == 0) {
+					activeButton = snowButton;
+					return;
+				}
 				if (i == 1) {
 					activeButton = meteorButton;
+					return;
 				}
-				if (user->money >= 100) {
+				else if (user->money >= 100) {
 					if (i == 3) {
 						activeButton = basicButton;
 						return;
@@ -645,3 +670,4 @@ void MapGame::drawPlaceholderTower(wxBufferedPaintDC & pdc)
 		activeButton->drawPlaceholder(pdc, mouse);
 	}
 }
+

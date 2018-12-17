@@ -20,6 +20,8 @@ public:
 	Skill(int x, int y, vector<Monster*> *allMonster);
 	int getCenterX();
 	int getCenterY();
+	void setCenterX(int x);
+	void setCenterY(int y);
 	~Skill();
 };
 
