@@ -16,6 +16,7 @@
 #include "UserButton.h"
 #include "MeteorButton.h"
 #include "SnowButton.h"
+#include "WallButton.h"
 #include "BasicButton.h"
 #include "SlowButton.h"
 #include "StunButton.h"
@@ -24,6 +25,7 @@
 #include "Skill.h"
 #include "Meteor.h"
 #include "Snow.h"
+#include "Wall.h"
 
 using namespace std;
 
@@ -48,7 +50,7 @@ private:
 	wxImage loadLogo(wxString path);
 	vector<koordinatBox> skillButton;
 	vector<Monster*> allMonster;
-	vector<wxBitmap*> skill, animationMonster, coin, meteorPng, snowPng;
+	vector<wxBitmap*> skill, animationMonster, coin, meteorPng, snowPng, wallPng;
 	vector<Bullet*> allBullet;
 	wxTimer *timer;
 	wxTimer *questTimer;
@@ -69,6 +71,7 @@ private:
 	UserButton *activeButton;
 	MeteorButton *meteorButton;
 	SnowButton *snowButton;
+	WallButton *wallButton;
 	BasicButton *basicButton;
 	SlowButton *slowButton;
 	StunButton *stunButton;

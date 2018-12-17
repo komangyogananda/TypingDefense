@@ -11,7 +11,7 @@ class Skill
 {
 protected:
 	vector<Monster*> *allMonster;
-	int cooldown;
+	double cooldown;
 	int centerX, centerY;
 public:
 	virtual int getIdx() = 0;

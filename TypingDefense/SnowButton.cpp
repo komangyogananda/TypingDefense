@@ -24,7 +24,6 @@ void SnowButton::execute()
 	int limY = y + 300;
 	for (int i = x; i < limX; i += 100) {
 		for (int j = y; j < limY; j += 100) {
-			wxMessageOutputDebug().Printf("%d %d", i, j);
 			fix = new Snow(i, j, allMonster);
 			allSkill->push_back(fix);
 		}
@@ -49,7 +48,7 @@ void SnowButton::drawPlaceholder(wxBufferedPaintDC & pdc, wxMouseState & mouse)
 			{
 				// make a path that contains a circle and some lines
 				gc->SetPen(*wxWHITE_PEN);
-				gc->SetBrush(wxColor(0, 0, 255, 128));
+				gc->SetBrush(wxColor(204, 255, 255, 128));
 				wxGraphicsPath path = gc->CreatePath();
 				path.AddRectangle(x - 150.0, y - 150.0, 300.0, 300.0);
 				gc->FillPath(path);

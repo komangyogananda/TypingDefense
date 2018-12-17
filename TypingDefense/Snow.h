@@ -5,7 +5,7 @@ class Snow
 	: public Skill
 {
 private:
-	int idx;
+	int idx = 0;
 	wxTimer *timer;
 	DECLARE_EVENT_TABLE()
 

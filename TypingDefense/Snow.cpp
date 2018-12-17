@@ -54,5 +54,18 @@ void Snow::OnDraw(wxTimerEvent & event)
 
 Snow::~Snow()
 {
+	int i = this->centerX;
+	int j = this->centerY;
+	int limX = i + 100;
+	int limY = j + 100;
+	if (!(*allMonster).empty()) {
+		for (auto it : *allMonster) {
+			int x = it->getX();
+			int y = it->getY();
+			if (i <= x && x <= limX && j <= y && y <= limY) {
+				it->setSlow(0);
+			}
+		}
+	}
 	delete timer;
 }

@@ -5,7 +5,7 @@ class Meteor :
 	public Skill
 {
 private:
-	int radius = 100;
+	int radius = 65;
 	int damage = 70;
 	int idx;
 	wxTimer *timer;
