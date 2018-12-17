@@ -14,20 +14,13 @@ SnowButton::SnowButton(MapGame * map, std::vector<Tower*>* allTower, std::vector
 
 SnowButton::~SnowButton()
 {
+	//delete skill;
 }
 
 void SnowButton::execute()
 {
-	int x = skill->getCenterX() - 150;
-	int y = skill->getCenterY() - 150;
-	int limX = x + 300;
-	int limY = y + 300;
-	for (int i = x; i < limX; i += 100) {
-		for (int j = y; j < limY; j += 100) {
-			fix = new Snow(i, j, allMonster);
-			allSkill->push_back(fix);
-		}
-	}
+	fix = new Snow(skill->getCenterX(), skill->getCenterY(), allMonster);
+	allSkill->push_back(fix);
 }
 
 void SnowButton::drawPlaceholder(wxBufferedPaintDC & pdc, wxMouseState & mouse)
@@ -50,7 +43,7 @@ void SnowButton::drawPlaceholder(wxBufferedPaintDC & pdc, wxMouseState & mouse)
 				gc->SetPen(*wxWHITE_PEN);
 				gc->SetBrush(wxColor(204, 255, 255, 128));
 				wxGraphicsPath path = gc->CreatePath();
-				path.AddRectangle(x - 150.0, y - 150.0, 300.0, 300.0);
+				path.AddCircle(x, y, 150);
 				gc->FillPath(path);
 				gc->StrokePath(path);
 				delete gc;

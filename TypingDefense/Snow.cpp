@@ -1,4 +1,5 @@
 #include "Snow.h"
+#include <algorithm>
 
 BEGIN_EVENT_TABLE(Snow, wxEvtHandler)
 	EVT_TIMER(2000, Snow::OnDraw)
@@ -11,20 +12,20 @@ int Snow::getIdx()
 
 void Snow::active(wxBufferedPaintDC &pdc, std::vector<wxBitmap*>* png)
 {
-	int i = this->centerX;
-	int j = this->centerY;
-	int limX = i + 50;
-	int limY = j + 50;
+	int i = this->centerX - 150;
+	int j = this->centerY - 150;
 	pdc.DrawBitmap(*(*png)[0], wxPoint(i, j));
-	i -= 50;
-	j -= 50;
 
 	if (!(*allMonster).empty()) {
 		for (auto it : *allMonster) {
 			int x = it->getX();
 			int y = it->getY();
-			if (i <= x && x <= limX && j <= y && y <= limY) {
-				it->setSlow(50);
+			double dist = ((x - this->centerX) * (x - this->centerX) + (y - this->centerY) * (y - this->centerY));
+			if (dist <= 150 * 150) {
+				it->setSlow(max(it->getSlow(), 50));
+			}
+			else if (it->getSlow() == 50) {
+				it->setSlow(0);
 			}
 		}
 	}
@@ -56,15 +57,15 @@ void Snow::OnDraw(wxTimerEvent & event)
 
 Snow::~Snow()
 {
-	int i = this->centerX;
-	int j = this->centerY;
-	int limX = i + 100;
-	int limY = j + 100;
+	int i = this->centerX - 150;
+	int j = this->centerY - 150;
+
 	if (!(*allMonster).empty()) {
 		for (auto it : *allMonster) {
 			int x = it->getX();
 			int y = it->getY();
-			if (i <= x && x <= limX && j <= y && y <= limY) {
+			double dist = ((x - this->centerX) * (x - this->centerX) + (y - this->centerY) * (y - this->centerY));
+			if (dist <= 150 * 150) {
 				it->setSlow(0);
 			}
 		}

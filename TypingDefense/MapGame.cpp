@@ -131,7 +131,6 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	}
 
 	image = loadLogo(wxT("\\snow\\snow.png"));
-	image.Rescale(100, 100);
 	snowPng.push_back(new wxBitmap(image));
 
 	image = loadLogo(wxT("\\wall\\wall.png"));
@@ -289,6 +288,9 @@ MapGame::~MapGame()
 	delete slowButton;
 	delete stunButton;
 	delete tauntButton;
+	delete meteorButton;
+	delete snowButton;
+	delete wallButton;
 	delete level;
 }
 
@@ -374,7 +376,6 @@ void MapGame::OnPaint(wxPaintEvent& event) {
 			}
 		}
 		else if (c != nullptr) {
-			wxMessageOutputDebug().Printf("%d", (*it)->getIdx());
 			if ((*it)->getIdx() >= 30) {
 				delete *it;
 				it = allSkill.erase(it);

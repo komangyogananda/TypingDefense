@@ -14,6 +14,7 @@ MeteorButton::MeteorButton(MapGame * map, std::vector<Tower*>* allTower, std::ve
 
 MeteorButton::~MeteorButton()
 {
+	delete skill;
 }
 
 void MeteorButton::execute()
