@@ -12,7 +12,7 @@ Tower::Tower(double x, double y, vector<Monster*> *allMonster, vector<wxBitmap*>
 	this->x = x;
 	this->y = y;
 	this->radius = 170;
-	this->s = 30;
+	this->s = 120;
 	level = 1;
 	this->allMonster = allMonster;
 	this->drawRadius = 1;
@@ -35,12 +35,12 @@ void Tower::draw(wxBufferedPaintDC & pdc)
 	wxGraphicsContext *gc = wxGraphicsContext::Create(pdc);
 	if (gc)
 	{
-		wxGraphicsPath path = gc->CreatePath();
+		/*wxGraphicsPath path = gc->CreatePath();
 		gc->SetPen(wxPen(wxColour(255,255,255)));
 		gc->SetBrush(wxBrush(wxColour(255,255,255)));
 		path.AddCircle(x, y, this->drawRadius);
-		gc->StrokePath(path);
-		gc->DrawBitmap(*gambar, x - 2 / 2, y - s / 2, s, s);
+		gc->StrokePath(path);*/
+		gc->DrawBitmap(*gambar, x - s / 4, y-2*s/3, s, s);
 		delete gc;
 	}
 
@@ -61,7 +61,7 @@ void Tower::drawPlaceholder(wxBufferedPaintDC & pdc)
 	{
 		gc->SetPen(*wxWHITE_PEN);
 		gc->SetBrush(wxBrush(wxColour(r, g, b, 120)));
-		gc->DrawBitmap(*gambar, x - 2 / 2, y - s / 2, s, s);
+		gc->DrawBitmap(*gambar, x - s / 4, y - 2*s/3, s, s);
 		delete gc;
 	}
 

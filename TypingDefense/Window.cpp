@@ -4,15 +4,19 @@
 #include "MapGame.h"
 #include "Frame.h"
 #include<iostream>
+#include "User.h"
+
 using namespace std;
 BEGIN_EVENT_TABLE(Window, wxWindow)
 	EVT_PAINT(Window::OnPaint)
 	EVT_LEFT_DOWN(Window::OnClick)
 	EVT_TIMER(1001, Window::OnTimer)
+	EVT_CHAR(Window::OnChar)
 END_EVENT_TABLE()
 
-Window::Window(wxFrame *parent) : wxWindow(parent, wxID_ANY)
+Window::Window(wxFrame *parent, User* user) : wxWindow(parent, wxID_ANY)
 {
+	this->SetFocus();
 	this->parent = parent;
 	parent->GetSize(&width, &height);
 	int w, h;
@@ -30,6 +34,8 @@ Window::Window(wxFrame *parent) : wxWindow(parent, wxID_ANY)
 	hsimage = new wxBitmap(image);
 	timer = new wxTimer(this, 1001);
 	timer->Start(10);
+	this->user = user;
+	cursor = clock();
 }
 
 Window::~Window()
@@ -61,6 +67,18 @@ void Window::OnPaint(wxPaintEvent& event) {
 	if (drawHighScore) {
 		pdc.DrawBitmap(*hsimage, wxPoint(0, 0), true);
 	}
+	int textX = 780 * w / 1920;
+	int textY = 930 * h / 1080;
+	wxFont fontNama(20, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	pdc.SetFont(fontNama);
+	string nama = user->getNama();
+	if (editStatus) {
+		if (fmod(double(clock() - cursor) / CLOCKS_PER_SEC, 2) <= 1.0) {
+			nama.push_back('|');
+		}
+	}
+	pdc.DrawText(nama, wxPoint(textX, textY));
+	wxMessageOutputDebug().Printf("%d", editStatus);
 }
 
 void Window::OnButtonClick(wxCommandEvent& event)
@@ -89,26 +107,33 @@ void Window::OnClick(wxMouseEvent& event)
 	int aboutY2 = 890 * h / 1080;
 	int hsY1 = 681 * h / 1080;
 	int hsY2 = 766 * h / 1080;
-	if (X1 <= x && x <= X2) {
-		if (playGameY1 <= y && y <= playGameY2) {
-			Frame *currFrame = (Frame*)parent;
-			currFrame->setCurrentWindow(2);
-		}
-		else if (aboutY1 <= y && y <= aboutY2) {
-			if (!drawAbout && !drawHighScore) {
-				drawAbout = true;
+	
+	if (!drawAbout && !drawHighScore) {
+		if (X1 <= x && x <= X2) {
+			if (playGameY1 <= y && y <= playGameY2) {
+				Frame *currFrame = (Frame*)parent;
+				currFrame->setCurrentWindow(2);
 			}
-		}
-		else if (hsY1 <= y && y <= hsY2) {
-			if (!drawAbout && !drawHighScore) {
-				drawHighScore = true;
+			else if (aboutY1 <= y && y <= aboutY2) {
+				if (!drawAbout && !drawHighScore) {
+					drawAbout = true;
+					editStatus = false;
+				}
+			}
+			else if (hsY1 <= y && y <= hsY2) {
+				if (!drawAbout && !drawHighScore) {
+					drawHighScore = true;
+					editStatus = false;
+				}
 			}
 		}
 	}
+
 	int exitX1 = 1737 * w / 1920;
 	int exitX2 = 1900 * w / 1920;
 	int exitY1 = 976 * h / 1080;
 	int exitY2 = 1061 * h / 1080;
+
 	if (exitX1 <= x && x <= exitX2) {
 		if (exitY1 <= y && y <= exitY2) {
 			this->parent->Close(true);
@@ -120,7 +145,9 @@ void Window::OnClick(wxMouseEvent& event)
 	int closeAboutY1 = 261 * h / 1080;
 	int closeAboutY2 = 310 * h / 1080;
 	if (closeAboutX1 <= x && x <= closeAboutX2) {
-		if (drawAbout) drawAbout = false;
+		if (closeAboutY1 <= y && y <= closeAboutY2) {
+			if (drawAbout) drawAbout = false;
+		}
 	}
 
 	int closeHighScoreX1 = 1330 * w / 1920;
@@ -128,11 +155,43 @@ void Window::OnClick(wxMouseEvent& event)
 	int closeHighScoreY1 = 357 * h / 1080;
 	int closeHighScoreY2 = 406 * h / 1080;
 	if (closeHighScoreX1 <= x && x <= closeHighScoreX2) {
-		if (drawHighScore) drawHighScore = false;
+		if (closeHighScoreY1 <= y && y <= closeHighScoreY2) {
+			if (drawHighScore) drawHighScore = false;
+		}
+	}
+
+	int editX1 = 1178 * w / 1920;
+	int editY1 = 917 * h / 1080;
+	int editX2 = 1305 * w / 1920;
+	int editY2 = 977 * h / 1080;
+	if (!drawAbout && !drawHighScore) {
+		if (editX1 <= x && x <= editX2) {
+			if (editY1 <= y && y <= editY2) {
+				if (editStatus) editStatus = false;
+				else editStatus = true;
+			}
+		}
 	}
 }
 
 void Window::OnTimer(wxTimerEvent & event)
 {
 	Refresh(0);
+}
+
+void Window::OnChar(wxKeyEvent & event)
+{
+	string temp = user->getNama();
+	if (editStatus) {
+		if (event.GetKeyCode() == WXK_BACK) {
+			if (!temp.empty()) {
+				temp.pop_back();
+			}
+		}
+		else if (event.GetKeyCode() >= -1 && event.GetKeyCode() <= 255 && isprint(event.GetKeyCode()) && (temp.size() < 20)) {
+			char x = event.GetKeyCode();
+			temp.push_back(x);
+		}
+	}
+	user->setNama(temp);
 }

@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(MapGame, wxWindow)
 	EVT_PAINT(MapGame::OnPaint)
 END_EVENT_TABLE()
 
-MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
+MapGame::MapGame(wxFrame * parent, User* user) : wxWindow(parent, wxID_ANY)
 {
 	srand(time(0));
 
@@ -41,7 +41,7 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	quest = new Quest();
 	this->quest->setStatus(0);
 	
-	user = new User("Your Name");
+	this->user = user;
 	user->lifePoint = 500;
 
 	this->parent = parent;
@@ -61,9 +61,6 @@ MapGame::MapGame(wxFrame * parent) : wxWindow(parent, wxID_ANY)
 	this->now = clock();
 	
 	background = nullptr;
-	mapStatusBar = new wxStatusBar(this->parent, -1);
-	status = "default";
-	this->parent->SetStatusBar(mapStatusBar);
 	
 	/*Monster *test = new Monster(this, 100, 35, 0, wxGetDisplaySize().GetHeight() / 2, w, h/2, 1);
 	allMonster.push_back(test);*/
@@ -275,7 +272,6 @@ MapGame::~MapGame()
 	delete questImage1;
 	delete questImage2;
 	delete questImage3;
-	delete mapStatusBar;
 	delete background;
 	delete timer;
 	delete questTimer;
@@ -303,8 +299,6 @@ wxImage MapGame::loadLogo(wxString path) {
 }
 
 void MapGame::OnPaint(wxPaintEvent& event) {
-	mapStatusBar->SetStatusText(status);
-	mapStatusBar->Show(true);
 	wxBufferedPaintDC pdc(this);
 
 	pdc.DrawBitmap(*background, wxPoint(0, 0), true);
@@ -577,14 +571,16 @@ void MapGame::OnClick(wxMouseEvent & event)
 	int mainMenuY1 = 570 * h / 1080;
 	int mainMenuY2 = 658 * h / 1080;
 
-	if (menuX1 <= x && x <= menuX2) {
-		if (pauseY1 <= y && y <= pauseY2) {
-			resumeGame();
+	if (pause) {
+		if (menuX1 <= x && x <= menuX2) {
+			if (pauseY1 <= y && y <= pauseY2) {
+				resumeGame();
+			}
+			else if (mainMenuY1 <= y && y <= mainMenuY2) {
+				changeWindow();
+			}
+			return;
 		}
-		else if (mainMenuY1 <= y && y <= mainMenuY2) {
-			changeWindow();
-		}
-		return;
 	}
 
 }
@@ -698,7 +694,6 @@ void MapGame::LevelUp()
 {
 	int currlevel = level->getLevel();
 	delete level;
-	status = to_string(currlevel + 1);
 	level = new Level(currlevel + 1);
 }
 
@@ -754,7 +749,6 @@ void MapGame::drawPlaceholderTower(wxBufferedPaintDC & pdc)
 {
 	wxMouseState mouse = wxGetMouseState();
 	if (activeButton != nullptr) {
-		wxMessageOutputDebug().Printf("Placeholder in");
 		activeButton->drawPlaceholder(pdc, mouse);
 	}
 }

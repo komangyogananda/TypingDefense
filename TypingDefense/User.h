@@ -6,13 +6,17 @@ class User
 {
 private:
 	string nama;
-	int money, mana, level, lifePoint, score;
-	int maxMana, maxLifePoint;
+	int money, level, lifePoint, score;
+	int maxLifePoint;
 	friend class MapGame;
 public:
 	User(string nama);
 	int getMoney();
 	void setMoney(int money);
+	string getNama();
+	void setNama(string nama);
+	void setLevel(int level);
+	int getLevel();
 	~User();
 };
 

@@ -46,7 +46,6 @@ private:
 	wxImage image;
 	Tower *tower, *placeholder;
 	Skill *curSkill;
-	wxStatusBar *mapStatusBar;
 	wxImage loadLogo(wxString path);
 	vector<koordinatBox> skillButton;
 	vector<Monster*> allMonster;
@@ -56,7 +55,6 @@ private:
 	wxTimer *questTimer;
 	wxTimer *spawnTimer;
 	int timerInterval, questTimerInterval, spawnTimerInterval;
-	string status;
 	User *user;
 	void drawHealthBar(wxBufferedPaintDC &pdc);
 	void drawPlaceholderTower(wxBufferedPaintDC &pdc);
@@ -88,7 +86,7 @@ private:
 	
 
 public:
-	MapGame(wxFrame *parent);
+	MapGame(wxFrame *parent, User* user);
 	~MapGame();
 	void OnPaint(wxPaintEvent &event);
 	void OnClick(wxMouseEvent &event);
